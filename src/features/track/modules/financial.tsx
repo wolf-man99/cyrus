@@ -74,13 +74,13 @@ function Expenses() {
         ) : txs.isError ? (
           <ErrorState error={txs.error} onRetry={() => void txs.refetch()} />
         ) : txs.data.length === 0 ? (
-          <EmptyState icon={<Receipt className="size-5" />} title="No expenses yet" description="Use Expense on Today to log one." />
+          <EmptyState icon={<Receipt className="size-5" />} title="No expenses yet" description="Use Expense on Today to log one" />
         ) : (
           <ul className="space-y-2">
             {txs.data.map((t) => (
               <li key={t.id} className="flex items-center gap-3.5 rounded-row border border-line bg-surface/75 px-4 py-3">
-                <span className="flex size-10 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-financial)_16%,transparent)] text-financial">
-                  <Receipt className="size-[18px]" />
+                <span className="flex size-10 items-center justify-center rounded-full bg-white/[0.06] text-muted">
+                  <Receipt className="size-4.5" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-callout font-semibold">{t.note ?? t.category}</p>
@@ -104,7 +104,7 @@ function FinancialProgress() {
   if (txs.isPending) return <SkeletonRows rows={2} />;
   if (txs.isError) return <ErrorState error={txs.error} onRetry={() => void txs.refetch()} />;
   const month = txs.data.filter((t) => t.occurredAt >= startOfMonth());
-  if (month.length === 0) return <EmptyState title="No spending this month" description="Expenses you log will be summarised here." />;
+  if (month.length === 0) return <EmptyState title="No spending this month" description="Expenses you log are summarised here" />;
   return <SpendingByCategory txs={month} currency={currency} />;
 }
 

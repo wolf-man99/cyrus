@@ -44,13 +44,13 @@ function Workouts() {
         ) : workouts.isError ? (
           <ErrorState error={workouts.error} onRetry={() => void workouts.refetch()} />
         ) : workouts.data.length === 0 ? (
-          <EmptyState icon={<Dumbbell className="size-5" />} title="No workouts yet" description="Use Workout on Today to log one." />
+          <EmptyState icon={<Dumbbell className="size-5" />} title="No workouts yet" description="Use Workout on Today to log one" />
         ) : (
           <ul className="space-y-2">
             {workouts.data.map((w) => (
               <li key={w.id} className="flex items-center gap-3.5 rounded-row border border-line bg-surface/75 px-4 py-3">
-                <span className="flex size-10 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--color-physical)_16%,transparent)] text-physical">
-                  <Dumbbell className="size-[18px]" />
+                <span className="flex size-10 items-center justify-center rounded-full bg-white/[0.06] text-muted">
+                  <Dumbbell className="size-4.5" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-callout font-semibold">{w.workoutType}</p>
@@ -74,7 +74,7 @@ function WeightProgress() {
   if (weight.isPending) return <SkeletonRows rows={1} />;
   if (weight.isError) return <ErrorState error={weight.error} onRetry={() => void weight.refetch()} />;
   if (weight.data.length < 2)
-    return <EmptyState icon={<Scale className="size-5" />} title="Not enough data yet" description="Log your weight on two different days to see a trend." />;
+    return <EmptyState icon={<Scale className="size-5" />} title="Not enough data yet" description="Log your weight on two different days to see a trend" />;
   return <WeightTrendChart logs={weight.data} />;
 }
 
@@ -86,12 +86,12 @@ function PhysicalHistory() {
     ...(weight.data ?? []).map((w) => ({ id: w.id, at: w.loggedAt, title: `Weight · ${formatNumber(w.value)} ${w.unit}`, icon: Scale })),
     ...(workouts.data ?? []).map((w) => ({ id: w.id, at: w.performedAt, title: `${w.workoutType} · ${w.durationMin} min`, icon: Dumbbell })),
   ].sort((a, b) => b.at.localeCompare(a.at));
-  if (items.length === 0) return <EmptyState title="No history yet" description="Your weight and workout logs will appear here." />;
+  if (items.length === 0) return <EmptyState title="No history yet" description="Your weight and workout logs show up here" />;
   return (
     <ol className="space-y-2">
       {items.map(({ id, at, title, icon: Icon }) => (
         <li key={id} className="flex items-center gap-3 rounded-row border border-line bg-surface/75 px-4 py-3">
-          <Icon className="size-[18px] text-physical" />
+          <Icon className="size-4.5 text-muted" />
           <span className="flex-1 text-callout">{title}</span>
           <span className="text-footnote text-muted">{timeAgo(at)}</span>
         </li>

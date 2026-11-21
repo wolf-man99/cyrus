@@ -13,7 +13,7 @@ import { formatCurrency } from '@/lib/format';
 
 export function LogExpenseSheet({ open, onOpenChange }: { open: boolean; onOpenChange(open: boolean): void }) {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Log expense" description="Amount and a category is all it takes.">
+    <Sheet open={open} onOpenChange={onOpenChange} title="Log expense" description="An amount and a category is all it takes">
       <ExpenseForm onDone={() => onOpenChange(false)} />
     </Sheet>
   );

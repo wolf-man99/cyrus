@@ -61,7 +61,7 @@ export function createDemoState(now: ISODate = today()): DemoState {
     createdAt: created,
   });
   const habits: Habit[] = [
-    habit('Meditate', 'sparkles', 'mental', 0),
+    habit('Meditate', 'brain', 'mental', 0),
     habit('Move 30 min', 'dumbbell', 'physical', 1),
     habit('Read 20 pages', 'book-open', 'intellectual', 2),
     habit('Drink 2L water', 'droplet', 'physical', 3),

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Captions as CaptionsIcon, History, Keyboard, Sparkles, X } from 'lucide-react';
+import { Captions as CaptionsIcon, Eye, History, Keyboard, X } from 'lucide-react';
 import { CyrusOrb } from '@/components/orb/CyrusOrb';
 import { IconButton } from '@/components/ui/IconButton';
 import { Button } from '@/components/ui/Button';
@@ -109,9 +109,7 @@ export function CyrusPage() {
       <header className="relative z-10 grid grid-cols-[auto_1fr_auto] items-center gap-2 px-4 pt-[max(var(--safe-top),1rem)]">
         <IconButton label="End conversation" icon={<X className="size-5" />} onClick={end} className="bg-white/10" />
         <div className="flex flex-col items-center">
-          <p className="flex items-center gap-1.5 text-subhead font-semibold tracking-wide text-white/85">
-            <Sparkles className="size-4" /> cyrus
-          </p>
+          <p className="text-subhead font-semibold text-white/85">Cyrus</p>
           <ConnectionBadge
             connection={convo.connection}
             onClick={canPreview ? () => (previewOpen ? exitPreview() : setPreviewOpen(true)) : undefined}
@@ -158,7 +156,7 @@ export function CyrusPage() {
                   label="preview"
                   ariaLabel="Preview orb states"
                   pressed={previewOpen}
-                  icon={<Sparkles className="size-5" />}
+                  icon={<Eye className="size-5" />}
                   onClick={() => (previewOpen ? exitPreview() : setPreviewOpen(true))}
                 />
               )}

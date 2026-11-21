@@ -23,7 +23,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       </label>
       <div
         className={cn(
-          'flex items-center rounded-row border bg-white/[0.04] transition-colors focus-within:border-secondary/70 focus-within:bg-white/[0.06]',
+          'flex items-center rounded-control border bg-white/[0.04] transition-colors focus-within:border-white/30 focus-within:bg-white/[0.06]',
           error ? 'border-danger/60' : 'border-line',
         )}
       >

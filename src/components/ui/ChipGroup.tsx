@@ -67,10 +67,8 @@ export function ChipGroup<T extends string | number>({
               onKeyDown={(e) => onKeyDown(e, i)}
               onClick={() => onChange(selected && allowDeselect ? null : option.value)}
               className={cn(
-                'inline-flex h-10 items-center gap-1.5 rounded-full border px-4 text-subhead font-medium transition-all duration-200 active:scale-95',
-                selected
-                  ? 'border-transparent bg-primary text-fg shadow-[0_0_20px_-6px_rgb(180_76_255/0.9)]'
-                  : 'border-line bg-white/[0.04] text-muted hover:text-fg',
+                'inline-flex h-10 items-center gap-2 rounded-full border px-4 text-subhead font-medium transition-[background-color,border-color,color,transform] active:scale-[0.97]',
+                selected ? 'border-transparent bg-primary text-fg' : 'border-line bg-white/[0.04] text-muted hover:text-fg',
               )}
             >
               {option.icon}

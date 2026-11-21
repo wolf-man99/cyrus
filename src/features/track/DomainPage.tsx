@@ -52,17 +52,15 @@ function DomainHeader({ config }: { config: LifeDomainConfig }) {
     <header className="mt-4 flex items-center gap-4">
       <span
         aria-hidden
-        className="flex size-16 shrink-0 items-center justify-center rounded-full"
-        style={{
-          background: `radial-gradient(circle at 35% 30%, color-mix(in oklab, ${config.accent} 45%, white 10%), color-mix(in oklab, ${config.accent} 18%, transparent) 70%)`,
-          color: 'white',
-          boxShadow: `0 0 44px -8px ${config.accent}`,
-        }}
+        className="flex size-14 shrink-0 items-center justify-center rounded-full border border-line bg-surface-raised text-fg"
       >
-        <Icon className="size-7" />
+        <Icon className="size-6" />
       </span>
       <div className="min-w-0">
-        <h1 className="font-display text-display font-bold">{config.name}</h1>
+        <h1 className="flex items-center gap-3 font-display text-display font-semibold">
+          {config.name}
+          <span aria-hidden className="size-2 rounded-full" style={{ background: config.accent }} />
+        </h1>
         <p className="text-callout text-muted">{config.tagline}</p>
       </div>
     </header>

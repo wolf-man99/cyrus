@@ -44,7 +44,7 @@ export function PrioritiesSection({ tasks, isPending, error, onRetry, day, onTog
             compact
             icon={<Star className="size-5" />}
             title="No priorities yet"
-            description="Pick up to three things that would make today a win."
+            description="Pick up to three things that would make today a win"
             action={
               <Button size="sm" variant="secondary" onClick={onAdd}>
                 Set a priority
@@ -84,7 +84,7 @@ export function TasksSection({ tasks, isPending, error, onRetry, day, onToggle, 
             compact
             icon={<ListChecks className="size-5" />}
             title="Nothing else on your plate"
-            description="Add a task, or give it a time to make it a commitment."
+            description="Add a task, or give it a time to make it a commitment"
             action={
               <Button size="sm" variant="secondary" onClick={onAdd}>
                 Add task

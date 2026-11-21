@@ -34,8 +34,8 @@ export function SegmentedControl<T extends string>({ label, options, value, onCh
             {selected && (
               <motion.span
                 layoutId={layoutId}
-                className="absolute inset-0 rounded-full bg-primary shadow-[0_0_18px_-6px_rgb(180_76_255/0.9)]"
-                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                className="absolute inset-0 rounded-full bg-primary"
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
             )}
             <span className="relative">{o.label}</span>

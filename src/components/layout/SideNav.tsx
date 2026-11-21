@@ -2,7 +2,7 @@ import { NavLink } from 'react-router';
 import { FlaskConical, LogOut } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { CyrusMark } from '@/components/brand/CyrusMark';
-import { MiniOrb } from '@/components/brand/MiniOrb';
+import { OrbitMark } from '@/components/brand/OrbitMark';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { NAV_ITEMS } from './navItems';
 
@@ -12,17 +12,17 @@ export function SideNav({ className }: { className?: string }) {
   return (
     <aside
       className={cn(
-        'fixed inset-y-0 left-0 z-30 w-[17rem] flex-col border-r border-line bg-canvas/40 px-5 py-7 backdrop-blur-xl',
+        'fixed inset-y-0 left-0 z-30 w-[17rem] flex-col border-r border-line bg-canvas/60 px-4 py-8 backdrop-blur-xl',
         className,
       )}
     >
       <div className="px-3">
         <CyrusMark />
-        <p className="mt-1.5 pl-[2.375rem] text-caption text-subtle">Personal Intelligence System</p>
+        <p className="mt-1 pl-8 text-footnote text-subtle">Personal intelligence system</p>
       </div>
 
-      <nav aria-label="Primary" className="mt-10">
-        <ul className="space-y-1">
+      <nav aria-label="Primary" className="mt-8">
+        <ul className="space-y-0.5">
           {NAV_ITEMS.map((item) => (
             <li key={item.to}>
               <NavLink
@@ -30,23 +30,15 @@ export function SideNav({ className }: { className?: string }) {
                 end={item.end}
                 className={({ isActive }) =>
                   cn(
-                    'flex h-12 items-center gap-3.5 rounded-full px-4 text-callout font-medium transition-all',
+                    'flex h-10 items-center gap-2.5 rounded-control px-3 text-callout font-medium transition-colors',
                     isActive
-                      ? 'bg-primary/90 text-fg shadow-[0_0_26px_-8px_rgb(180_76_255/0.9)]'
-                      : 'text-muted hover:bg-white/[0.05] hover:text-fg',
+                      ? 'bg-white/[0.07] text-fg ring-1 ring-white/[0.06] ring-inset'
+                      : 'text-muted hover:bg-white/[0.04] hover:text-fg',
                   )
                 }
               >
-                {({ isActive }) => (
-                  <>
-                    {item.icon === 'orb' ? (
-                      <MiniOrb className="size-6" active={isActive} />
-                    ) : (
-                      <item.icon className="size-[22px]" strokeWidth={isActive ? 2.2 : 1.8} />
-                    )}
-                    {item.label}
-                  </>
-                )}
+                {item.icon === 'orb' ? <OrbitMark className="size-4.5" /> : <item.icon className="size-4.5" />}
+                {item.label}
               </NavLink>
             </li>
           ))}
@@ -74,7 +66,7 @@ export function SideNav({ className }: { className?: string }) {
               title="Sign out"
               className="inline-flex size-10 items-center justify-center rounded-full text-muted transition hover:bg-white/[0.06] hover:text-fg"
             >
-              <LogOut className="size-[18px]" />
+              <LogOut className="size-4.5" />
             </button>
           </div>
         )}

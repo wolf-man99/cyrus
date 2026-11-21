@@ -12,7 +12,7 @@ export function RouteError() {
     <div className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
       <div className="cosmos" aria-hidden />
       <div className="relative">
-        <p className="font-display text-title font-bold">Something broke in orbit</p>
+        <p className="font-display text-title font-semibold">Something went wrong</p>
         <p className="mt-2 text-callout text-muted">{message}</p>
         <Button className="mt-6" onClick={() => window.location.assign('/')}>
           Back to Today

@@ -19,9 +19,9 @@ export function SwitchRow({ label, description, icon, checked, onChange }: Switc
       aria-checked={checked}
       aria-labelledby={`${id}-label`}
       onClick={() => onChange(!checked)}
-      className="flex w-full items-center gap-3 rounded-row border border-line bg-white/[0.04] px-4 py-3 text-left transition hover:bg-white/[0.06]"
+      className="flex w-full items-center gap-3 rounded-row border border-line bg-white/[0.04] px-4 py-3 text-left transition-colors hover:bg-white/[0.06]"
     >
-      {icon && <span className={cn('shrink-0 transition-colors', checked ? 'text-warning' : 'text-muted')}>{icon}</span>}
+      {icon && <span className={cn('shrink-0 transition-colors', checked ? 'text-fg' : 'text-muted')}>{icon}</span>}
       <span className="min-w-0 flex-1">
         <span id={`${id}-label`} className="block text-callout font-medium">
           {label}
@@ -31,13 +31,13 @@ export function SwitchRow({ label, description, icon, checked, onChange }: Switc
       <span
         aria-hidden
         className={cn(
-          'relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors duration-300',
+          'relative h-8 w-13 shrink-0 rounded-full transition-colors',
           checked ? 'bg-primary' : 'bg-white/15',
         )}
       >
         <span
           className={cn(
-            'absolute top-[2px] left-[2px] size-[27px] rounded-full bg-white shadow-md transition-transform duration-300 ease-[var(--ease-spring)]',
+            'absolute top-0.5 left-0.5 size-7 rounded-full bg-white shadow-sm transition-transform duration-300',
             checked && 'translate-x-5',
           )}
         />

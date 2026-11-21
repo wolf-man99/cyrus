@@ -21,7 +21,7 @@ export function SideButton({ label, icon, onClick, pressed, ariaLabel }: SideBut
     >
       <span
         className={cn(
-          'flex size-[3.25rem] items-center justify-center rounded-full border transition-all duration-200 group-active:scale-90',
+          'flex size-13 items-center justify-center rounded-full border transition-[background-color,color,transform] group-active:scale-95',
           pressed ? 'border-transparent bg-white text-canvas' : 'border-white/10 bg-white/10 text-white backdrop-blur-md group-hover:bg-white/15',
         )}
       >

@@ -23,15 +23,15 @@ export function CheckCircle({ checked, onChange, label, disabled, className }: C
     >
       <span
         className={cn(
-          'flex size-[26px] items-center justify-center rounded-full border-[1.5px] transition-all duration-300 ease-[var(--ease-spring)]',
-          checked
-            ? 'scale-100 border-transparent bg-aurora shadow-[0_0_16px_-2px_rgb(180_76_255/0.7)]'
-            : 'border-white/25 group-hover:border-secondary/70 group-active:scale-90',
+          'flex size-6 items-center justify-center rounded-full border-[1.5px] transition-[background-color,border-color,transform] group-active:scale-90',
+          checked ? 'border-transparent bg-primary' : 'border-white/25 group-hover:border-white/45',
         )}
       >
         <Check
-          className={cn('size-4 text-fg transition-all duration-300', checked ? 'scale-100 opacity-100' : 'scale-50 opacity-0')}
-          strokeWidth={3}
+          className={cn(
+            'size-3.5 stroke-[3] text-fg transition-[transform,opacity]',
+            checked ? 'scale-100 opacity-100' : 'scale-50 opacity-0',
+          )}
         />
       </span>
     </button>

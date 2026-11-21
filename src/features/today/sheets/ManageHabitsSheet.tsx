@@ -32,7 +32,7 @@ function ManageHabits({ habits, onDone }: { habits: Habit[]; onDone(): void }) {
   const archiveHabit = useArchiveHabit();
   const feedback = useSaveFeedback();
   const [title, setTitle] = useState('');
-  const [icon, setIcon] = useState<HabitIcon>('sparkles');
+  const [icon, setIcon] = useState<HabitIcon>('sun');
   const [domain, setDomain] = useState<LifeDomain | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -61,12 +61,12 @@ function ManageHabits({ habits, onDone }: { habits: Habit[]; onDone(): void }) {
               const Icon = HABIT_ICON_COMPONENTS[h.icon];
               return (
                 <li key={h.id} className="flex items-center gap-3 py-1.5 pr-2 pl-4">
-                  <Icon className="size-5 text-lilac" />
+                  <Icon className="size-5 text-muted" />
                   <span className="flex-1 truncate text-callout">{h.title}</span>
                   <IconButton
                     tone="plain"
                     label={`Remove ${h.title}`}
-                    icon={<Trash2 className="size-[18px]" />}
+                    icon={<Trash2 className="size-4.5" />}
                     disabled={archiveHabit.isPending}
                     onClick={() =>
                       archiveHabit.mutate(h.id, {
@@ -112,8 +112,8 @@ function ManageHabits({ habits, onDone }: { habits: Habit[]; onDone(): void }) {
                   aria-pressed={selected}
                   onClick={() => setIcon(name)}
                   className={cn(
-                    'flex aspect-square items-center justify-center rounded-full border transition-all active:scale-90',
-                    selected ? 'border-transparent bg-primary text-fg shadow-glow' : 'border-line bg-white/[0.04] text-muted hover:text-fg',
+                    'flex aspect-square items-center justify-center rounded-full border transition-[background-color,border-color,color,transform] active:scale-95',
+                    selected ? 'border-transparent bg-primary text-fg' : 'border-line bg-white/[0.04] text-muted hover:text-fg',
                   )}
                 >
                   <Icon className="size-5" />

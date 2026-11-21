@@ -31,7 +31,7 @@ export const AmountInput = forwardRef<HTMLInputElement, AmountInputProps>(functi
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
           style={{ width: `${chars}ch` }}
-          className="min-w-0 bg-transparent text-center font-display text-[3.5rem] leading-tight font-bold text-fg tabular caret-secondary placeholder:text-white/20 focus:outline-none"
+          className="min-w-0 bg-transparent text-center font-display text-[3.5rem] leading-tight font-semibold text-fg tabular caret-secondary placeholder:text-white/20 focus:outline-none"
           {...props}
         />
         {suffix && <span className="font-display text-title font-semibold text-muted">{suffix}</span>}

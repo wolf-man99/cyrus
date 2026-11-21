@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { Plus, Sparkles } from 'lucide-react';
+import { Mic, Plus } from 'lucide-react';
 import { IconButton } from '@/components/ui/IconButton';
 import { formatLongDate, greeting, today } from '@/lib/dates';
 import { dailyProgress } from '@/domain/progress';
@@ -59,9 +59,9 @@ export function TodayPage() {
       <div className="flex items-center justify-between pt-1 lg:hidden">
         <Link
           to="/cyrus"
-          className="inline-flex h-10 items-center gap-2 rounded-full bg-primary/90 pr-4 pl-3 text-subhead font-semibold shadow-[0_0_24px_-6px_rgb(180_76_255/0.9)] transition active:scale-95"
+          className="inline-flex h-10 items-center gap-2 rounded-full bg-primary pr-4 pl-3.5 text-subhead font-semibold transition-[background-color,transform] hover:bg-primary-strong active:scale-[0.98]"
         >
-          <Sparkles className="size-4" /> Ask Cyrus
+          <Mic className="size-4" /> Ask Cyrus
         </Link>
         <IconButton label="Add task" icon={<Plus className="size-5" />} onClick={() => setSheet('task')} />
       </div>
@@ -69,7 +69,7 @@ export function TodayPage() {
       <header className="mt-6 lg:mt-0 lg:flex lg:items-end lg:justify-between">
         <div>
           <p className="text-subhead font-medium text-muted">{formatLongDate(now)}</p>
-          <h1 className="mt-1 font-display text-display font-bold">
+          <h1 className="mt-1 font-display text-display font-semibold">
             {greeting(now)}
             {name ? `, ${name}` : ''}
           </h1>

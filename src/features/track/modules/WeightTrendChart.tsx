@@ -76,10 +76,10 @@ export function WeightTrendChart({ logs }: { logs: WeightLog[] }) {
           />
         )}
         <circle cx={x(shown.loggedAt)} cy={y(shown.value)} r="4.5" fill="var(--color-physical)" stroke="var(--color-surface)" strokeWidth="2" />
-        <text x={PAD.left} y={H - 6} className="fill-[var(--color-subtle)] text-[10px]">
+        <text x={PAD.left} y={H - 6} className="fill-[var(--color-subtle)] text-[11px]">
           {dayLabel(points[0]!.loggedAt)}
         </text>
-        <text x={W - PAD.right} y={H - 6} textAnchor="end" className="fill-[var(--color-subtle)] text-[10px]">
+        <text x={W - PAD.right} y={H - 6} textAnchor="end" className="fill-[var(--color-subtle)] text-[11px]">
           {dayLabel(last.loggedAt)}
         </text>
       </svg>

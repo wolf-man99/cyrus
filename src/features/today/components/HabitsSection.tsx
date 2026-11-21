@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { cn } from '@/lib/cn';
 import { tap } from '@/lib/haptics';
 import type { HabitWithState } from '@/domain/habits';
-import { LIFE_DOMAIN_CONFIG } from '@/domain/lifeDomains';
 import { HABIT_ICON_COMPONENTS } from '@/components/habitIcons';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { EmptyState, ErrorState } from '@/components/ui/States';
@@ -28,7 +27,7 @@ export function HabitsSection({ habits, isPending, error, onRetry, onToggle, onM
         meta={habits && habits.length > 0 ? `${done} of ${habits.length}` : undefined}
         action={
           habits && habits.length > 0 ? (
-            <button type="button" onClick={onManage} className="rounded-full px-2 py-1 font-medium text-secondary hover:text-lilac">
+            <button type="button" onClick={onManage} className="rounded-full px-2 py-1 font-medium text-secondary hover:text-fg">
               Edit
             </button>
           ) : undefined
@@ -59,7 +58,7 @@ export function HabitsSection({ habits, isPending, error, onRetry, onToggle, onM
             compact
             icon={<Repeat className="size-5" />}
             title="Build your first habit"
-            description="Small daily actions, one tap to complete."
+            description="Small daily actions, one tap to complete"
             action={
               <Button size="sm" variant="secondary" leadingIcon={<Plus className="size-4" />} onClick={onManage}>
                 Add habit
@@ -74,7 +73,6 @@ export function HabitsSection({ habits, isPending, error, onRetry, onToggle, onM
 
 function HabitTile({ habit, onToggle }: { habit: HabitWithState; onToggle(h: HabitWithState): void }) {
   const Icon = HABIT_ICON_COMPONENTS[habit.icon];
-  const accent = habit.domain ? LIFE_DOMAIN_CONFIG[habit.domain].accent : 'var(--color-secondary)';
   return (
     <button
       type="button"
@@ -86,35 +84,32 @@ function HabitTile({ habit, onToggle }: { habit: HabitWithState; onToggle(h: Hab
       }}
       className="group flex w-full flex-col items-center gap-2 rounded-row px-1 py-2"
     >
-      <motion.span
-        whileTap={{ scale: 0.88 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+      <span
         className={cn(
-          'relative flex size-16 items-center justify-center rounded-full transition-all duration-500',
+          'relative flex size-16 items-center justify-center rounded-full border transition-[background-color,border-color,color,transform] group-active:scale-95',
           habit.doneToday
-            ? 'bg-aurora text-fg shadow-[0_0_28px_-4px_rgb(180_76_255/0.85)]'
-            : 'border border-line bg-surface/80 group-hover:border-white/20',
+            ? 'border-transparent bg-primary text-fg'
+            : 'border-line bg-surface/80 text-muted group-hover:border-white/20 group-hover:text-fg',
         )}
-        style={habit.doneToday ? undefined : { color: accent }}
       >
-        <Icon className="size-6" strokeWidth={1.9} />
+        <Icon className="size-5" />
         {habit.doneToday && (
           <motion.span
             aria-hidden
-            initial={{ scale: 0.6, opacity: 0.8 }}
-            animate={{ scale: 1.6, opacity: 0 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="absolute inset-0 rounded-full border-2 border-secondary"
+            initial={{ scale: 0.9, opacity: 0.6 }}
+            animate={{ scale: 1.35, opacity: 0 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0 rounded-full border border-secondary"
           />
         )}
-      </motion.span>
+      </span>
       <span className={cn('line-clamp-2 text-center text-footnote leading-tight font-medium', habit.doneToday ? 'text-fg' : 'text-muted')}>
         {habit.title}
       </span>
       <span
         className={cn(
-          'flex h-4 items-center gap-0.5 text-caption tabular',
-          habit.streak > 0 ? 'text-warning' : 'text-transparent',
+          'flex h-4 items-center gap-1 text-caption text-subtle tabular',
+          habit.streak === 0 && 'invisible',
         )}
         aria-hidden
       >

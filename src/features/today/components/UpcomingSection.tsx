@@ -33,12 +33,12 @@ export function UpcomingSection({ tasks, isPending, error, onRetry }: UpcomingSe
                 <li key={t.id} className="flex min-h-[4.25rem] items-center gap-3.5 rounded-row border border-line bg-surface/75 px-4 py-3">
                   <div
                     aria-hidden
-                    className="flex size-11 shrink-0 flex-col items-center justify-center rounded-[0.875rem] bg-white/[0.06] leading-none"
+                    className="flex size-11 shrink-0 flex-col items-center justify-center rounded-control bg-white/[0.06] leading-none"
                   >
-                    <span className="text-[0.625rem] font-semibold tracking-wider text-secondary uppercase">
+                    <span className="text-caption text-muted">
                       {new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(date)}
                     </span>
-                    <span className="mt-0.5 text-headline font-bold tabular">{date.getDate()}</span>
+                    <span className="mt-0.5 text-headline font-semibold tabular">{date.getDate()}</span>
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-callout font-semibold">{t.title}</p>
@@ -63,7 +63,7 @@ export function UpcomingSection({ tasks, isPending, error, onRetry }: UpcomingSe
             compact
             icon={<CalendarDays className="size-5" />}
             title="A clear week ahead"
-            description="Tasks you schedule for the coming days will appear here."
+            description="Tasks you schedule for the coming days show up here"
           />
         )}
       </div>

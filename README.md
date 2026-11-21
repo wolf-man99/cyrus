@@ -4,7 +4,7 @@
 
 > Simple to use. Powerful under the hood.
 
-Design language: **Orbit × Yap**. Deep cosmic backgrounds, dark purple surfaces, a glowing planet for daily progress, and a full-screen energy orb for the assistant.
+Design language: **Orbit × Yap**. Deep cosmic backgrounds, dark purple surfaces, a glowing planet for daily progress, and a full-screen energy orb for the assistant. The chrome stays quiet (no glows, gradient text or looping decoration) so each screen has one bright element: the planet on Today, the orb on Cyrus. The signature detail is an orbit ring with a single dot, used in the planet, the orb and the logo mark.
 
 ---
 

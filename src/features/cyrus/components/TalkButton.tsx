@@ -94,7 +94,7 @@ export function TalkButton({ status, onStart, onStop, onInterrupt }: TalkButtonP
         onContextMenu={(e) => e.preventDefault()}
         className={cn(
           'relative flex size-[4.75rem] touch-none items-center justify-center rounded-full border-[3px] border-white select-none [-webkit-touch-callout:none]',
-          'transition-transform duration-200 active:scale-95',
+          'transition-transform active:scale-95',
           listening && 'scale-105',
         )}
       >
@@ -103,16 +103,16 @@ export function TalkButton({ status, onStart, onStop, onInterrupt }: TalkButtonP
         )}
         <span
           className={cn(
-            'flex items-center justify-center rounded-full transition-all duration-300',
-            listening ? 'size-[3.6rem] bg-white text-canvas' : 'size-[3.6rem] text-white',
+            'flex size-14 items-center justify-center rounded-full transition-[background-color,color]',
+            listening ? 'bg-white text-canvas' : 'text-white',
           )}
         >
           {busy ? (
             <Square className="size-7 fill-white text-white" strokeWidth={0} />
           ) : listening && latched ? (
-            <ArrowUp className="size-8" strokeWidth={2.6} />
+            <ArrowUp className="size-7 stroke-[2.25]" />
           ) : (
-            <Mic className="size-8" strokeWidth={2} />
+            <Mic className="size-7 stroke-2" />
           )}
         </span>
       </button>

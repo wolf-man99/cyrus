@@ -26,7 +26,7 @@ export function DemoBanner({ className }: { className?: string }) {
         open={open}
         onOpenChange={setOpen}
         title="You’re in demo mode"
-        description="CYRUS is running without a backend."
+        description="CYRUS is running without a backend"
         footer={
           <Button block size="lg" onClick={() => setOpen(false)}>
             Got it
@@ -48,7 +48,7 @@ export function DemoBanner({ className }: { className?: string }) {
           </li>
           <li>
             To enable secure sign-in, saved data and the assistant, add your Supabase project keys and deploy the{' '}
-            <code className="rounded bg-white/10 px-1.5 py-0.5 text-footnote text-lilac">cyrus</code> edge function (see
+            <code className="rounded bg-white/10 px-1.5 py-0.5 text-footnote text-fg">cyrus</code> edge function (see
             README).
           </li>
         </ul>

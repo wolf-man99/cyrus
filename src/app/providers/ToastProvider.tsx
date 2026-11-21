@@ -53,14 +53,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <motion.div
               key={t.id}
               layout
-              initial={{ opacity: 0, y: -16, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               role={t.tone === 'error' ? 'alert' : 'status'}
               onClick={() => dismiss(t.id)}
               className={cn(
-                'glass pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-[1.25rem] px-4 py-3 shadow-float',
+                'glass pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-card px-4 py-3 shadow-float',
               )}
             >
               <span className="mt-0.5 shrink-0">{icons[t.tone]}</span>

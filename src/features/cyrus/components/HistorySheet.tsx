@@ -20,7 +20,7 @@ export function HistorySheet({ open, onOpenChange, messages, onClear }: HistoryS
       open={open}
       onOpenChange={onOpenChange}
       title="Conversation"
-      description="This session’s messages with Cyrus."
+      description="This session’s messages with Cyrus"
       footer={
         messages.length > 0 ? (
           <Button variant="secondary" block onClick={onClear}>
@@ -33,7 +33,7 @@ export function HistorySheet({ open, onOpenChange, messages, onClear }: HistoryS
         <EmptyState
           icon={<MessagesSquare className="size-5" />}
           title="No messages yet"
-          description="Hold the mic or type to start a conversation."
+          description="Hold the mic or type to start a conversation"
           className="mb-6"
         />
       ) : (

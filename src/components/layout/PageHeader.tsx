@@ -21,7 +21,7 @@ export function PageHeader({ eyebrow, title, description, leading, actions, clas
         </div>
       )}
       {eyebrow && <p className="mb-1 text-subhead font-medium text-muted">{eyebrow}</p>}
-      <h1 className="font-display text-display font-bold">{title}</h1>
+      <h1 className="font-display text-display font-semibold">{title}</h1>
       {description && <p className="mt-2 max-w-prose text-callout text-muted">{description}</p>}
     </header>
   );

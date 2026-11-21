@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/Field';
 import { LIFE_DOMAIN_LIST } from '@/domain/lifeDomains';
+import { CyrusMark } from '@/components/brand/CyrusMark';
 import { useAuth } from '@/app/providers/AuthProvider';
 
 const emailSchema = z.email({ error: 'Enter a valid email address' });
@@ -40,10 +41,10 @@ export function WelcomePage() {
       <DomainOrbit />
 
       <div className="relative w-full max-w-sm pb-6 text-center">
-        <h1 className="font-display text-display font-bold text-aurora">Welcome to CYRUS</h1>
+        <CyrusMark className="justify-center" />
+        <h1 className="mt-4 font-display text-title font-semibold">Your personal intelligence system</h1>
         <p className="mt-3 text-callout text-muted">
-          Your personal intelligence system. Track every area of life, reflect, and improve — with an assistant that knows
-          your progress.
+          Plan your day, track seven areas of life and reflect on how it’s going, with an assistant at your side.
         </p>
 
         {sentTo ? (
@@ -72,7 +73,7 @@ export function WelcomePage() {
               }}
             />
             <Button type="submit" block size="lg" loading={sending}>
-              Start tracking
+              Email me a sign-in link
             </Button>
             <p className="text-center text-footnote text-subtle">Passwordless sign-in. Your data is private to you.</p>
           </form>
@@ -87,8 +88,8 @@ function DomainOrbit() {
   const outer = LIFE_DOMAIN_LIST.slice(3);
   return (
     <div aria-hidden className="relative my-auto aspect-square w-[min(74vw,40dvh,22rem)] shrink-0">
-      <Ring items={outer} radius={43} duration={70} />
-      <Ring items={inner} radius={26} duration={50} reverse />
+      <Ring items={outer} radius={43} />
+      <Ring items={inner} radius={26} reverse />
       <div className="absolute inset-[38%] flex items-center justify-center">
         <div className="planet-sphere size-full rounded-full" />
       </div>
@@ -96,27 +97,16 @@ function DomainOrbit() {
   );
 }
 
-function Ring({
-  items,
-  radius,
-  duration,
-  reverse,
-}: {
-  items: typeof LIFE_DOMAIN_LIST;
-  radius: number;
-  duration: number;
-  reverse?: boolean;
-}) {
-  const spin = { animation: `spin ${duration}s linear infinite${reverse ? ' reverse' : ''}` };
-  const counter = { animation: `spin ${duration}s linear infinite${reverse ? '' : ' reverse'}` };
+/** The seven domains placed on two still orbits around the planet. */
+function Ring({ items, radius, reverse }: { items: typeof LIFE_DOMAIN_LIST; radius: number; reverse?: boolean }) {
   return (
-    <div className="absolute inset-0" style={spin}>
+    <div className="absolute inset-0">
       <div
         className="absolute rounded-full border border-white/[0.07]"
         style={{ inset: `${50 - radius}%` }}
       />
       {items.map((d, i) => {
-        const angle = (i / items.length) * 2 * Math.PI + (reverse ? 0.6 : 0);
+        const angle = (i / items.length) * 2 * Math.PI + (reverse ? 0.6 : -0.4);
         const Icon = d.icon;
         return (
           <div
@@ -124,10 +114,7 @@ function Ring({
             className="absolute size-11 -translate-x-1/2 -translate-y-1/2"
             style={{ left: `${50 + radius * Math.cos(angle)}%`, top: `${50 + radius * Math.sin(angle)}%` }}
           >
-            <div
-              className="glass flex size-full items-center justify-center rounded-full"
-              style={{ ...counter, color: d.accent, boxShadow: `0 0 24px -6px ${d.accent}` }}
-            >
+            <div className="glass flex size-full items-center justify-center rounded-full text-muted">
               <Icon className="size-5" />
             </div>
           </div>

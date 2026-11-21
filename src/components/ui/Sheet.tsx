@@ -22,7 +22,7 @@ export function Sheet({ open, onOpenChange, title, description, children, footer
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="sheet-overlay fixed inset-0 z-50 bg-black/60 backdrop-blur-[2px]" />
+        <Dialog.Overlay className="sheet-overlay fixed inset-0 z-50 bg-black/60" />
         <Dialog.Content
           className={cn(
             'sheet-content fixed z-50 flex max-h-[92dvh] flex-col overflow-hidden border border-line-strong bg-surface shadow-float outline-none',
@@ -32,15 +32,10 @@ export function Sheet({ open, onOpenChange, title, description, children, footer
           )}
           {...(description ? {} : { 'aria-describedby': undefined })}
         >
-          {/* Ambient glow */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -top-24 left-1/2 h-48 w-72 -translate-x-1/2 rounded-full bg-primary/25 blur-3xl"
-          />
           <div aria-hidden className="mx-auto mt-2.5 h-1.5 w-10 shrink-0 rounded-full bg-white/20 sm:hidden" />
           <header className="relative flex items-start justify-between gap-4 px-6 pt-4 sm:pt-6">
             <div className="min-w-0">
-              <Dialog.Title className="font-display text-title font-bold">{title}</Dialog.Title>
+              <Dialog.Title className="font-display text-title font-semibold">{title}</Dialog.Title>
               {description && (
                 <Dialog.Description className="mt-1 text-subhead text-muted">{description}</Dialog.Description>
               )}
@@ -49,7 +44,7 @@ export function Sheet({ open, onOpenChange, title, description, children, footer
               aria-label="Close"
               className="glass -mr-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full text-muted transition hover:text-fg active:scale-95"
             >
-              <X className="size-[18px]" />
+              <X className="size-4.5" />
             </Dialog.Close>
           </header>
           <div className={cn('relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pt-5', footer ? 'pb-4' : 'pb-0')}>
@@ -67,7 +62,7 @@ export function Sheet({ open, onOpenChange, title, description, children, footer
 /** Sticky action area for forms rendered inside a Sheet body. */
 export function SheetFooter({ children }: { children: ReactNode }) {
   return (
-    <div className="sticky bottom-0 -mx-6 mt-6 bg-gradient-to-t from-surface via-surface to-surface/0 px-6 pt-4 pb-[max(var(--safe-bottom),1.25rem)] sm:pb-6">
+    <div className="sticky bottom-0 -mx-6 mt-6 bg-linear-to-t from-surface via-surface to-surface/0 px-6 pt-4 pb-[max(var(--safe-bottom),1.25rem)] sm:pb-6">
       {children}
     </div>
   );

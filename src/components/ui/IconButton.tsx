@@ -12,7 +12,7 @@ export interface IconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonEle
 const sizes = { sm: 'size-9', md: 'size-11', lg: 'size-14' };
 const tones = {
   glass: 'glass text-fg hover:bg-white/[0.1]',
-  primary: 'bg-aurora text-fg shadow-glow hover:brightness-110',
+  primary: 'bg-primary text-fg hover:bg-primary-strong',
   plain: 'text-muted hover:text-fg hover:bg-white/[0.06]',
 };
 
@@ -27,7 +27,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       aria-label={label}
       title={label}
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-full transition-[transform,background-color,filter] duration-200 active:scale-95 disabled:opacity-40',
+        'inline-flex shrink-0 items-center justify-center rounded-full transition-[transform,background-color,color] active:scale-95 disabled:opacity-40',
         sizes[size],
         tones[tone],
         className,

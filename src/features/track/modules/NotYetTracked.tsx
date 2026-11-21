@@ -9,7 +9,7 @@ export function NotYetTracked({ config, section }: { config: LifeDomainConfig; s
     <EmptyState
       icon={<Orbit className="size-5" />}
       title={`No ${config.name.toLowerCase()} ${label} yet`}
-      description={`Logging for ${config.areas.slice(0, 3).join(', ').toLowerCase()} is part of the next build phase. Goals already work.`}
+      description={`Logging for ${config.areas.slice(0, 3).join(', ').toLowerCase()} arrives in the next build phase`}
     />
   );
 }

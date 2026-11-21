@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router';
 import { cn } from '@/lib/cn';
-import { MiniOrb } from '@/components/brand/MiniOrb';
+import { OrbitMark } from '@/components/brand/OrbitMark';
 import { NAV_ITEMS } from './navItems';
 
 /** Floating glass tab bar for phones and tablets. */
@@ -10,8 +10,8 @@ export function BottomNav({ className }: { className?: string }) {
       aria-label="Primary"
       className={cn(
         'fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(var(--safe-bottom),0.75rem)]',
-        // Fade content out beneath the bar
-        'before:pointer-events-none before:absolute before:inset-x-0 before:-top-10 before:bottom-0 before:bg-gradient-to-t before:from-canvas before:via-canvas/80 before:to-transparent',
+        // Fade content out beneath the bar (a tone shift within the canvas, not a hue gradient)
+        'before:pointer-events-none before:absolute before:inset-x-0 before:-top-10 before:bottom-0 before:bg-linear-to-t before:from-canvas before:via-canvas/80 before:to-transparent',
         className,
       )}
     >
@@ -23,7 +23,7 @@ export function BottomNav({ className }: { className?: string }) {
               end={item.end}
               className={({ isActive }) =>
                 cn(
-                  'group relative flex flex-1 flex-col items-center justify-center gap-1 rounded-full text-caption font-medium transition-colors',
+                  'flex flex-1 flex-col items-center justify-center gap-1 text-caption font-medium transition-colors',
                   isActive ? 'text-fg' : 'text-muted hover:text-fg',
                 )
               }
@@ -32,15 +32,11 @@ export function BottomNav({ className }: { className?: string }) {
                 <>
                   <span
                     className={cn(
-                      'flex h-8 w-14 items-center justify-center rounded-full transition-all duration-300',
-                      isActive && item.icon !== 'orb' && 'bg-primary/90 shadow-[0_0_22px_-4px_rgb(180_76_255/0.9)]',
+                      'flex h-8 w-14 items-center justify-center rounded-full transition-colors',
+                      isActive && 'bg-white/[0.1]',
                     )}
                   >
-                    {item.icon === 'orb' ? (
-                      <MiniOrb active={isActive} className={cn('transition-transform', isActive ? 'size-7' : 'size-6')} />
-                    ) : (
-                      <item.icon className="size-[21px]" strokeWidth={isActive ? 2.2 : 1.8} />
-                    )}
+                    {item.icon === 'orb' ? <OrbitMark className="size-5" /> : <item.icon className="size-5" />}
                   </span>
                   {item.label}
                 </>

@@ -14,7 +14,7 @@ export function useSaveFeedback() {
     saved: useCallback(
       (title: string) =>
         isDemo
-          ? show({ tone: 'demo', title, description: 'Demo mode — kept for this session only, not saved.' })
+          ? show({ tone: 'demo', title, description: 'Demo mode, not saved. Resets when you reload.' })
           : show({ tone: 'success', title }),
       [isDemo, show],
     ),

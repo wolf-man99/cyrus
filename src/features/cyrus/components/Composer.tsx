@@ -22,7 +22,7 @@ export function Composer({ onSend, onClose }: ComposerProps) {
   return (
     <form onSubmit={submit} className="mx-auto w-full max-w-md" noValidate>
       <div className="flex items-center gap-2 rounded-full border border-white/15 bg-black/40 p-1.5 pl-2 backdrop-blur-xl">
-        <IconButton label="Close keyboard input" tone="plain" size="sm" icon={<X className="size-[18px]" />} onClick={onClose} />
+        <IconButton label="Close keyboard input" tone="plain" size="sm" icon={<X className="size-4.5" />} onClick={onClose} />
         <label htmlFor="cyrus-composer" className="sr-only">
           Message Cyrus
         </label>
@@ -49,7 +49,7 @@ export function Composer({ onSend, onClose }: ComposerProps) {
           tone="primary"
           size="sm"
           disabled={!text.trim()}
-          icon={<ArrowUp className="size-[18px]" strokeWidth={2.5} />}
+          icon={<ArrowUp className="size-4.5 stroke-[2.25]" />}
         />
       </div>
       {error && (

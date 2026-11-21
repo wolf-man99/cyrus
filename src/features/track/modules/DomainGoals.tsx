@@ -25,7 +25,7 @@ export function DomainGoals({ domain, compact }: { domain: LifeDomain; compact?:
             compact={compact}
             icon={<Target className="size-5" />}
             title="No goals here yet"
-            description="Goals give this domain direction. Ask Cyrus to set one once the assistant is connected."
+            description="Goals give this domain a direction to grow in"
           />
         ) : (
           <ul className="space-y-2">

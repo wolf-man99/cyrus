@@ -19,17 +19,16 @@ export function ReflectPage() {
 
   return (
     <>
-      <PageHeader title="Reflect" description="Look back to move forward. Short, honest reviews that compound." />
+      <PageHeader title="Reflect" description="Short daily, weekly and monthly reviews of how life is going" />
 
       <section aria-label="Reviews" className="grid grid-cols-1 gap-3 md:grid-cols-3">
         {PERIODS.map((p) => {
           const t = REFLECTION_TEMPLATES[p];
           const Icon = ICONS[p];
           return (
-            <article key={p} className="relative overflow-hidden rounded-card border border-line bg-surface/75 p-5">
-              <div aria-hidden className="absolute -top-12 -right-10 size-36 rounded-full bg-primary/20 blur-3xl" />
-              <div className="relative flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-full bg-primary/20 text-lilac">
+            <article key={p} className="rounded-card border border-line bg-surface/75 p-5">
+              <div className="flex items-center gap-3">
+                <span className="flex size-11 items-center justify-center rounded-full bg-white/[0.06] text-fg">
                   <Icon className="size-5" />
                 </span>
                 <div>
@@ -37,7 +36,7 @@ export function ReflectPage() {
                   <p className="text-footnote text-muted">{t.cadence}</p>
                 </div>
               </div>
-              <ul className="relative mt-4 space-y-2">
+              <ul className="mt-4 space-y-2">
                 {t.checkIn && <li className="text-subhead text-muted">Mood & energy check-in</li>}
                 {t.prompts.map((prompt) => (
                   <li key={prompt.id} className="text-subhead text-muted">
@@ -45,9 +44,9 @@ export function ReflectPage() {
                   </li>
                 ))}
               </ul>
-              <p className="relative mt-4 flex flex-wrap gap-1.5">
+              <p className="mt-4 flex flex-wrap gap-1.5">
                 {t.insights.map((i) => (
-                  <span key={i} className="rounded-full bg-white/[0.06] px-2.5 py-1 text-caption text-lilac">
+                  <span key={i} className="rounded-full bg-white/[0.06] px-2.5 py-1 text-caption text-muted">
                     {i}
                   </span>
                 ))}
@@ -78,7 +77,7 @@ export function ReflectPage() {
             <EmptyState
               icon={<NotebookPen className="size-5" />}
               title={`No ${period} reflections yet`}
-              description="Your saved reviews will be kept here, newest first."
+              description="Saved reviews are kept here, newest first"
             />
           ) : (
             <ul className="space-y-2">

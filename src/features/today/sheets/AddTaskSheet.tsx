@@ -110,7 +110,7 @@ function TaskForm({ defaultPriority, onDone }: { defaultPriority: boolean; onDon
 
       <SwitchRow
         label="Today’s priority"
-        description="Priorities sit at the top of your day."
+        description="Priorities sit at the top of your day"
         icon={<Star className="size-5" fill={isPriority ? 'currentColor' : 'none'} />}
         checked={isPriority}
         onChange={setIsPriority}

@@ -12,7 +12,7 @@ export function TrackPage() {
 
   return (
     <>
-      <PageHeader title="Track" description="Seven domains. One life. See where you’re growing and what needs attention." />
+      <PageHeader title="Track" description="Seven areas of your life, each with its goals, activity and history" />
 
       {goals.isError ? (
         <ErrorState title="Couldn’t load your domains" error={goals.error} onRetry={() => void goals.refetch()} />
@@ -27,21 +27,16 @@ export function TrackPage() {
               <li key={d.id}>
                 <Link
                   to={`/track/${d.id}`}
-                  className="group flex min-h-[4.75rem] items-center gap-4 rounded-row border border-line bg-surface/75 px-4 py-3.5 transition-all duration-300 hover:border-white/15 hover:bg-surface active:scale-[0.99]"
+                  className="group flex min-h-19 items-center gap-4 rounded-row border border-line bg-surface/75 px-4 py-3 transition-colors hover:border-white/15 hover:bg-surface"
                 >
-                  <span
-                    aria-hidden
-                    className="flex size-12 shrink-0 items-center justify-center rounded-full transition-shadow duration-300"
-                    style={{
-                      background: `color-mix(in oklab, ${d.accent} 15%, transparent)`,
-                      color: d.accent,
-                      boxShadow: `0 0 28px -10px ${d.accent}`,
-                    }}
-                  >
-                    <Icon className="size-[22px]" />
+                  <span aria-hidden className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-fg">
+                    <Icon className="size-5" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-headline font-semibold">{d.name}</span>
+                    <span className="flex items-center gap-2 text-headline font-semibold">
+                      {d.name}
+                      <span aria-hidden className="size-1.5 rounded-full" style={{ background: d.accent }} />
+                    </span>
                     <span className="block truncate text-footnote text-muted">{d.tagline}</span>
                   </span>
                   <span className="shrink-0 text-subhead text-muted tabular">
