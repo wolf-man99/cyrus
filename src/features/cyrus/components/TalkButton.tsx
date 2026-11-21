@@ -8,6 +8,9 @@ interface TalkButtonProps {
   onStart(): void;
   onStop(): void;
   onInterrupt(): void;
+  /** A quick tap latched the mic open: stop automatically when the user pauses. */
+  onLatch?(): void;
+  blocked?: boolean;
 }
 
 /** A quick tap latches the mic open (tap again to send); a longer press is classic push-to-talk. */
@@ -17,7 +20,7 @@ const TAP_THRESHOLD_MS = 280;
  * The primary control. Push-to-talk by default; becomes "interrupt" while Cyrus is busy.
  * Works with touch, mouse and keyboard (hold Space / Enter).
  */
-export function TalkButton({ status, onStart, onStop, onInterrupt }: TalkButtonProps) {
+export function TalkButton({ status, onStart, onStop, onInterrupt, onLatch, blocked }: TalkButtonProps) {
   const holding = useRef(false);
   const pressedAt = useRef(0);
   const [latched, setLatched] = useState(false);
@@ -47,8 +50,10 @@ export function TalkButton({ status, onStart, onStop, onInterrupt }: TalkButtonP
   const release = () => {
     if (!holding.current) return;
     holding.current = false;
-    if (performance.now() - pressedAt.current < TAP_THRESHOLD_MS) setLatched(true);
-    else onStop();
+    if (performance.now() - pressedAt.current < TAP_THRESHOLD_MS) {
+      setLatched(true);
+      onLatch?.();
+    } else onStop();
   };
 
   const onPointerDown = (e: PointerEvent<HTMLButtonElement>) => {
@@ -74,9 +79,11 @@ export function TalkButton({ status, onStart, onStop, onInterrupt }: TalkButtonP
     ? 'interrupt'
     : listening
       ? latched
-        ? 'tap to send'
+        ? 'listening · tap to send'
         : 'release to send'
-      : 'hold to talk';
+      : blocked
+        ? 'mic blocked'
+        : 'tap or hold to talk';
 
   const ariaLabel = busy ? 'Interrupt Cyrus' : listening ? 'Send to Cyrus' : 'Talk to Cyrus — hold, or tap to start';
 

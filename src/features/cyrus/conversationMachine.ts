@@ -1,4 +1,4 @@
-import type { ConversationMessage } from '@/services/ai/types';
+import type { ConversationMessage } from '@/services/assistant/types';
 
 /**
  * The six visual/interaction states of the Cyrus assistant.
@@ -29,6 +29,11 @@ export type ConversationEvent =
   | { type: 'RECOVER' }
   | { type: 'FAIL'; error: string }
   | { type: 'DISMISS_ERROR' }
+  /** Cyrus paused for the user to approve a change. */
+  | { type: 'CONFIRM_REQUEST' }
+  | { type: 'CONFIRM_RESOLVED' }
+  /** Replace the transcript (resuming a saved conversation). */
+  | { type: 'LOAD'; messages: ConversationMessage[] }
   | { type: 'CLEAR' };
 
 export const initialConversationState: ConversationState = { status: 'idle', messages: [], error: null };
@@ -73,6 +78,12 @@ export function conversationReducer(state: ConversationState, event: Conversatio
       return { ...state, status: 'error', error: event.error };
     case 'DISMISS_ERROR':
       return status === 'error' ? { ...state, status: 'idle', error: null } : state;
+    case 'CONFIRM_REQUEST':
+      return status === 'thinking' ? { ...state, status: 'idle' } : state;
+    case 'CONFIRM_RESOLVED':
+      return status === 'idle' || status === 'listening' ? { ...state, status: 'thinking' } : state;
+    case 'LOAD':
+      return { ...state, messages: event.messages.slice(-MAX_MESSAGES) };
     case 'CLEAR':
       return { ...state, messages: [] };
   }

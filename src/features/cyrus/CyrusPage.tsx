@@ -13,9 +13,10 @@ import { Composer } from './components/Composer';
 import { HistorySheet } from './components/HistorySheet';
 import { ConnectionBadge } from './components/ConnectionBadge';
 import { StatePreview } from './components/StatePreview';
+import { ConfirmCard } from './components/ConfirmCard';
 
 const STATUS_TEXT: Record<CyrusStatus, string> = {
-  idle: 'Hold the mic to talk, or tap once',
+  idle: 'Tap the mic and speak, or hold it while you talk',
   listening: 'Listening…',
   thinking: 'Thinking…',
   speaking: 'Speaking',
@@ -78,7 +79,8 @@ export function CyrusPage() {
   }, []);
 
   const end = () => {
-    if (convo.status === 'listening' || convo.status === 'thinking' || convo.status === 'speaking') convo.interrupt();
+    if (convo.status === 'listening' || convo.status === 'thinking' || convo.status === 'speaking' || convo.pending) convo.interrupt();
+    convo.endConversation();
     const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
     if (idx > 0) navigate(-1);
     else navigate('/', { replace: true });
@@ -93,7 +95,18 @@ export function CyrusPage() {
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  const statusText = status === 'error' ? (preview ? 'Something went wrong' : convo.error) : STATUS_TEXT[status];
+  const statusText =
+    status === 'error'
+      ? preview
+        ? 'Something went wrong'
+        : convo.error
+      : !preview && convo.pending
+        ? 'Waiting for your go-ahead'
+        : !preview && status === 'thinking' && convo.activity
+          ? `${convo.activity}…`
+          : !preview && status === 'idle' && convo.micBlocked
+            ? 'Microphone blocked. Allow it in your browser settings, or type instead.'
+            : STATUS_TEXT[status];
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-canvas text-white" data-status={status}>
@@ -129,13 +142,23 @@ export function CyrusPage() {
 
       {/* Orb */}
       <main className="relative z-0 flex min-h-0 flex-1 flex-col items-center justify-center px-6">
-        <CyrusOrb status={status} getLevel={getLevel} className="w-[min(84vw,50dvh,30rem)]" />
-        <div className="mt-2 flex min-h-12 flex-col items-center gap-2 text-center" aria-live="assertive">
+        {/* The orb takes whatever height is left, so captions and cards never overlap it. */}
+        <div className="flex min-h-24 w-full flex-1 items-center justify-center">
+          <CyrusOrb status={status} getLevel={getLevel} className="h-full max-h-[min(84vw,50dvh,30rem)] max-w-full" />
+        </div>
+        <div className="mt-2 flex min-h-12 shrink-0 flex-col items-center gap-2 text-center" aria-live="assertive">
           <p className={status === 'error' ? 'max-w-xs text-callout text-danger' : 'text-callout text-white/70'}>{statusText}</p>
           {status === 'error' && !preview && (
-            <Button size="sm" variant="secondary" onClick={convo.dismissError}>
-              Dismiss
-            </Button>
+            <div className="flex gap-2">
+              {convo.canRetry && (
+                <Button size="sm" onClick={convo.retry}>
+                  Try again
+                </Button>
+              )}
+              <Button size="sm" variant="secondary" onClick={convo.dismissError}>
+                Dismiss
+              </Button>
+            </div>
           )}
         </div>
       </main>
@@ -143,6 +166,7 @@ export function CyrusPage() {
       {/* Transcript + controls */}
       <footer className="relative z-10 space-y-4 px-4 pb-[max(var(--safe-bottom),1.25rem)]">
         {captions && !preview && <Captions messages={convo.messages} />}
+        {convo.pending && !preview && <ConfirmCard pending={convo.pending} onConfirm={convo.confirm} onDecline={convo.decline} />}
 
         {typing ? (
           <Composer onSend={convo.sendText} onClose={() => setTyping(false)} />
@@ -167,6 +191,8 @@ export function CyrusPage() {
               }}
               onStop={() => void convo.stopListening()}
               onInterrupt={convo.interrupt}
+              onLatch={convo.enableAutoStop}
+              blocked={convo.micBlocked}
             />
             <div className="flex flex-col items-end gap-3">
               <SideButton label="captions" pressed={captions} icon={<CaptionsIcon className="size-5" />} onClick={toggleCaptions} />
@@ -184,7 +210,15 @@ export function CyrusPage() {
         )}
       </footer>
 
-      <HistorySheet open={historyOpen} onOpenChange={setHistoryOpen} messages={convo.messages} onClear={convo.clear} />
+      <HistorySheet
+        open={historyOpen}
+        onOpenChange={setHistoryOpen}
+        messages={convo.messages}
+        conversations={convo.conversations}
+        currentId={convo.conversationId}
+        onNew={convo.newConversation}
+        onOpenConversation={(id) => void convo.openConversation(id)}
+      />
     </div>
   );
 }

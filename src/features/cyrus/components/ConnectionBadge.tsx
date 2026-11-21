@@ -1,4 +1,4 @@
-import type { AssistantConnection } from '@/services/ai';
+import type { AssistantConnection } from '@/services/assistant';
 import { cn } from '@/lib/cn';
 
 const COPY: Record<AssistantConnection['kind'], { label: string; tone: string }> = {

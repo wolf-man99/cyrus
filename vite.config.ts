@@ -53,6 +53,8 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'supabase/functions/**/*.test.ts'],
+    // The Edge Function imports npm packages with Deno's `npm:` specifiers.
+    alias: [{ find: /^npm:zod@4$/, replacement: 'zod' }],
   },
 });

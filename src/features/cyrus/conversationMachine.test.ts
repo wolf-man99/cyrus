@@ -50,6 +50,16 @@ describe('conversation state machine', () => {
     expect(s.messages).toHaveLength(1);
   });
 
+  it('pauses for confirmation and resumes thinking', () => {
+    const waiting = run([{ type: 'USER_MESSAGE', message: msg('user') }, { type: 'CONFIRM_REQUEST' }]);
+    expect(waiting.status).toBe('idle');
+    expect(reduce(waiting, { type: 'CONFIRM_RESOLVED' }).status).toBe('thinking');
+  });
+
+  it('loads a saved conversation', () => {
+    expect(reduce(initial, { type: 'LOAD', messages: [msg('user'), msg('assistant')] }).messages).toHaveLength(2);
+  });
+
   it('cancels listening back to idle', () => {
     expect(run([{ type: 'LISTEN' }, { type: 'LISTEN_CANCEL' }]).status).toBe('idle');
   });
