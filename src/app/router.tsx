@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
             path: 'reflect',
             lazy: () => import('@/features/reflect/ReflectPage').then((m) => ({ Component: m.ReflectPage })),
           },
+          {
+            path: 'reflect/:period/:start',
+            lazy: () => import('@/features/reflect/ReflectionFlow').then((m) => ({ Component: m.ReflectionFlow })),
+          },
         ],
       },
       // Full-screen assistant — outside the shell, no tab bar.
