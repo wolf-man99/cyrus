@@ -19,7 +19,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const repository = useMemo<Repository | null>(() => {
     if (status === 'demo') return createDemoRepository();
     const supabase = getSupabase();
-    if (status === 'signed-in' && supabase && userId) return createSupabaseRepository(supabase, userId);
+    if ((status === 'signed-in' || status === 'recovery') && supabase && userId) return createSupabaseRepository(supabase, userId);
     return null;
   }, [status, userId]);
 

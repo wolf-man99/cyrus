@@ -3,6 +3,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { TodayPage } from '@/features/today/TodayPage';
 import { WelcomePage } from '@/features/auth/WelcomePage';
 import { SplashScreen } from '@/features/auth/SplashScreen';
+import { ResetPasswordPage } from '@/features/auth/ResetPasswordPage';
 import { RouteError } from './RouteError';
 import { useAuth } from './providers/AuthProvider';
 
@@ -11,6 +12,7 @@ function AuthGate() {
   const { status } = useAuth();
   if (status === 'loading') return <SplashScreen />;
   if (status === 'signed-out') return <WelcomePage />;
+  if (status === 'recovery') return <ResetPasswordPage />;
   return <Outlet />;
 }
 

@@ -1,5 +1,8 @@
 import { NavLink } from 'react-router';
-import { FlaskConical, LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { FlaskConical, UserRound } from 'lucide-react';
+import { useProfile } from '@/data/hooks/useProfile';
+import { ProfileSheet } from '@/features/profile/ProfileSheet';
 import { cn } from '@/lib/cn';
 import { CyrusMark } from '@/components/brand/CyrusMark';
 import { OrbitMark } from '@/components/brand/OrbitMark';
@@ -8,7 +11,9 @@ import { NAV_ITEMS } from './navItems';
 
 /** Desktop navigation rail (≥ lg). */
 export function SideNav({ className }: { className?: string }) {
-  const { status, session, signOut } = useAuth();
+  const { status, session } = useAuth();
+  const profile = useProfile();
+  const [profileOpen, setProfileOpen] = useState(false);
   return (
     <aside
       className={cn(
@@ -45,32 +50,30 @@ export function SideNav({ className }: { className?: string }) {
         </ul>
       </nav>
 
-      <div className="mt-auto">
-        {status === 'demo' ? (
+      <div className="mt-auto space-y-3">
+        {status === 'demo' && (
           <div className="rounded-card border border-warning/20 bg-warning/[0.06] p-4">
             <p className="flex items-center gap-2 text-subhead font-semibold text-warning">
               <FlaskConical className="size-4" /> Demo mode
             </p>
             <p className="mt-1 text-footnote text-muted">Sample data. Changes reset when you reload.</p>
           </div>
-        ) : (
-          <div className="flex items-center gap-3 rounded-card px-3 py-2">
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-subhead font-medium">{session?.user.email}</p>
-              <p className="text-caption text-subtle">Synced securely</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => void signOut()}
-              aria-label="Sign out"
-              title="Sign out"
-              className="inline-flex size-10 items-center justify-center rounded-full text-muted transition hover:bg-white/[0.06] hover:text-fg"
-            >
-              <LogOut className="size-4.5" />
-            </button>
-          </div>
         )}
+        <button
+          type="button"
+          onClick={() => setProfileOpen(true)}
+          className="flex w-full items-center gap-3 rounded-control px-3 py-2 text-left transition-colors hover:bg-white/[0.04]"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-muted">
+            <UserRound className="size-4.5" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-subhead font-medium">{profile.data?.displayName ?? (status === 'demo' ? 'Demo profile' : session?.user.email)}</span>
+            <span className="block text-caption text-subtle">Profile & settings</span>
+          </span>
+        </button>
       </div>
+      <ProfileSheet open={profileOpen} onOpenChange={setProfileOpen} />
     </aside>
   );
 }

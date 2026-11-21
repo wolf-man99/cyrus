@@ -9,6 +9,7 @@ import { useTasksForDay, useToggleTask, useUpcomingTasks } from '@/data/hooks/us
 import { useHabitsForDay, useToggleHabit } from '@/data/hooks/useHabits';
 import { useSaveFeedback } from '@/data/hooks/useSaveFeedback';
 import { useNow } from '@/lib/useNow';
+import { AccountButton } from '@/features/profile/AccountButton';
 import { TodayHero } from './components/TodayHero';
 import { QuickActions, type QuickAction } from './components/QuickActions';
 import { CyrusLaunchCard } from './components/CyrusLaunchCard';
@@ -63,7 +64,10 @@ export function TodayPage() {
         >
           <Mic className="size-4" /> Ask Cyrus
         </Link>
-        <IconButton label="Add task" icon={<Plus className="size-5" />} onClick={() => setSheet('task')} />
+        <div className="flex items-center gap-2">
+          <IconButton label="Add task" icon={<Plus className="size-5" />} onClick={() => setSheet('task')} />
+          <AccountButton />
+        </div>
       </div>
 
       <header className="mt-6 lg:mt-0 lg:flex lg:items-end lg:justify-between">
