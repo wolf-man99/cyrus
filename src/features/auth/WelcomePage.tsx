@@ -3,7 +3,6 @@ import { MailCheck } from 'lucide-react';
 import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/Field';
-import { MiniOrb } from '@/components/brand/MiniOrb';
 import { LIFE_DOMAIN_LIST } from '@/domain/lifeDomains';
 import { useAuth } from '@/app/providers/AuthProvider';
 
@@ -87,13 +86,12 @@ function DomainOrbit() {
   const inner = LIFE_DOMAIN_LIST.slice(0, 3);
   const outer = LIFE_DOMAIN_LIST.slice(3);
   return (
-    <div aria-hidden className="relative my-auto aspect-square w-[min(86vw,24rem)]">
-      <Ring items={outer} radius={47} duration={70} />
-      <Ring items={inner} radius={29} duration={50} reverse />
+    <div aria-hidden className="relative my-auto aspect-square w-[min(74vw,40dvh,22rem)] shrink-0">
+      <Ring items={outer} radius={43} duration={70} />
+      <Ring items={inner} radius={26} duration={50} reverse />
       <div className="absolute inset-[38%] flex items-center justify-center">
         <div className="planet-sphere size-full rounded-full" />
       </div>
-      <MiniOrb className="absolute top-[12%] right-[16%] size-3 opacity-70" />
     </div>
   );
 }
@@ -123,7 +121,7 @@ function Ring({
         return (
           <div
             key={d.id}
-            className="absolute size-12 -translate-x-1/2 -translate-y-1/2"
+            className="absolute size-11 -translate-x-1/2 -translate-y-1/2"
             style={{ left: `${50 + radius * Math.cos(angle)}%`, top: `${50 + radius * Math.sin(angle)}%` }}
           >
             <div
