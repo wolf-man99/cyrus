@@ -328,7 +328,7 @@ function Context({ kind, summary, currency }: { kind: StepContext; summary: Peri
       break;
     case 'goals_progressed':
       if (summary.goalsProgressed.length === 0) lines.push('No goal progress recorded');
-      lines.push(...summary.goalsProgressed.map((g) => `${g.title}: ${g.from !== null ? `${formatNumber(g.from)} → ` : ''}${formatNumber(g.to)}`));
+      lines.push(...summary.goalsProgressed.map((g) => `${g.title}: ${g.from !== null ? `${formatNumber(g.from)} → ${formatNumber(g.to)}` : `now ${formatNumber(g.to)}`}`));
       break;
     case 'neglected':
       lines.push(summary.neglected.length ? `Quiet areas: ${summary.neglected.map((d) => LIFE_DOMAIN_LIST.find((x) => x.id === d)!.name).join(', ')}` : 'Every area had some activity');

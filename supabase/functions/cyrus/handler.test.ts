@@ -9,6 +9,7 @@ const config: HandlerConfig = {
   ttsModel: 'test-tts',
   ttsVoice: 'sage',
   allowedOrigins: ['https://cyrus.example'],
+  rateLimitPerMinute: 100,
 };
 const context = { today: '2026-11-21', localTime: '18:00', timezone: 'UTC', currency: 'INR', weightUnit: 'kg', displayName: null };
 
@@ -112,6 +113,15 @@ describe('cyrus edge function', () => {
     const res = await handle(req('speech', { method: 'POST', body: JSON.stringify({ text: 'Logged.' }), headers: { 'Content-Type': 'application/json' } }));
     expect(res.headers.get('Content-Type')).toBe('audio/mpeg');
     expect(new Uint8Array(await res.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+  });
+
+  it('rate-limits each user', async () => {
+    const { handle } = setup({ rateLimitPerMinute: 2 });
+    const body = { messages: [{ role: 'user', content: 'hi' }], context };
+    expect((await handle(chat(body))).status).toBe(200);
+    expect((await handle(chat(body))).status).toBe(200);
+    expect((await handle(chat(body))).status).toBe(429);
+    expect((await handle(req('status'))).status).toBe(200); // status checks are free
   });
 
   it('only allows configured origins', async () => {

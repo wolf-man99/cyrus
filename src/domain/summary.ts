@@ -92,7 +92,8 @@ export function summarizePeriod(data: PeriodData, from: ISODate, to: ISODate, no
       const before = data.activities
         .filter((a) => a.kind === 'goal_progress' && a.goalId === g.id && dateOf(a.occurredAt) < from && a.value !== null)
         .sort((a, b) => b.occurredAt.localeCompare(a.occurredAt))[0];
-      return { goalId: g.id, title: g.title, from: before?.value ?? g.startValue, to: updates.at(-1)!.value! };
+      // Only compare against a recorded earlier value; never guess where the period started.
+      return { goalId: g.id, title: g.title, from: before?.value ?? null, to: updates.at(-1)!.value! };
     })
     .filter((g): g is NonNullable<typeof g> => g !== null);
 

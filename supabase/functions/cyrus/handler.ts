@@ -21,6 +21,8 @@ export interface HandlerConfig {
   ttsModel: string;
   ttsVoice: string;
   allowedOrigins: string[];
+  /** Requests per user per minute across chat, transcription and speech. */
+  rateLimitPerMinute: number;
 }
 
 export interface HandlerDeps {
@@ -61,8 +63,30 @@ const chatSchema = z.object({
 });
 const speechSchema = z.object({ text: z.string().trim().min(1).max(1500) });
 
-export function createHandler(config: HandlerConfig, deps: HandlerDeps) {
+/**
+ * Per-user sliding-window limit, held in this function instance's memory. It caps runaway
+ * clients and accidental loops cheaply; a shared store (e.g. a table) would be needed for a
+ * hard global limit across instances.
+ */
+export function createRateLimiter(perMinute: number, now: () => number = Date.now) {
+  const hits = new Map<string, number[]>();
+  return (key: string): boolean => {
+    const t = now();
+    const recent = (hits.get(key) ?? []).filter((x) => t - x < 60_000);
+    if (recent.length >= perMinute) {
+      hits.set(key, recent);
+      return false;
+    }
+    recent.push(t);
+    hits.set(key, recent);
+    if (hits.size > 10_000) hits.clear(); // bound memory
+    return true;
+  };
+}
+
+export function createHandler(config: HandlerConfig, deps: HandlerDeps & { now?: () => number }) {
   const log = deps.log ?? (() => undefined);
+  const allow = createRateLimiter(config.rateLimitPerMinute, deps.now);
 
   function corsHeaders(origin: string | null): Record<string, string> {
     const wildcard = config.allowedOrigins.includes('*');
@@ -106,6 +130,7 @@ export function createHandler(config: HandlerConfig, deps: HandlerDeps) {
     }
     if (!config.openaiKey) return json({ error: 'Cyrus AI isn’t configured on the server yet.' }, 503, origin);
     if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405, origin);
+    if (!allow(userId)) return json({ error: 'You’re sending requests too quickly. Wait a moment.' }, 429, origin);
 
     try {
       switch (route) {

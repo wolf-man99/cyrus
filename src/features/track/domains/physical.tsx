@@ -49,7 +49,11 @@ function Metrics({ range }: DomainViewProps) {
       <StatTile
         label="Workouts"
         value={workouts.data ? now.length : '—'}
-        change={workouts.data ? { text: `${signed(now.length - before.length, 0)} vs previous`, tone: now.length >= before.length ? 'good' : 'bad' } : null}
+        change={
+          workouts.data && (now.length || before.length)
+            ? { text: `${signed(now.length - before.length, 0)} vs previous`, tone: now.length > before.length ? 'good' : now.length < before.length ? 'bad' : 'neutral' }
+            : null
+        }
       />
       <StatTile
         label="Waist"

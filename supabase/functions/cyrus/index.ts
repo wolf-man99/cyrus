@@ -19,6 +19,7 @@ const handle = createHandler(
     ttsModel: Deno.env.get('OPENAI_TTS_MODEL') ?? 'gpt-4o-mini-tts',
     ttsVoice: Deno.env.get('OPENAI_TTS_VOICE') ?? 'sage',
     allowedOrigins: (Deno.env.get('ALLOWED_ORIGINS') ?? '*').split(',').map((o) => o.trim()),
+    rateLimitPerMinute: Number(Deno.env.get('RATE_LIMIT_PER_MINUTE') ?? 40),
   },
   {
     async verifyUser(token) {

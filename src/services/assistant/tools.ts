@@ -288,7 +288,7 @@ export const TOOLS = [
       if (a.which === 'previous') from = p === 'weekly' ? addDays(from, -7) : addMonths(from, -1);
       const to = p === 'weekly' ? addDays(from, 6) : endOfMonth(from);
       const r = { from, to };
-      const [tasks, habits, habitLogs, workouts, weight, expenses, income, activities, metrics, goals] = await Promise.all([
+      const [tasks, habits, habitLogs, workouts, weight, expenses, income, activities, prior, metrics, goals] = await Promise.all([
         repo.tasks.listBetween(from, to),
         repo.habits.list(),
         repo.habits.logsBetween(from, to),
@@ -297,10 +297,11 @@ export const TOOLS = [
         repo.expenses.list(r),
         repo.income.list(r),
         repo.activities.list(r),
+        repo.activities.list({ kinds: ['goal_progress'], to: addDays(from, -1), limit: 300 }),
         repo.metrics.list(r),
         repo.goals.list({ includeArchived: true }),
       ]);
-      const s = summarizePeriod({ tasks, habits, habitLogs, workouts, weight, expenses, income, activities, metrics, goals }, from, to, ctx.today);
+      const s = summarizePeriod({ tasks, habits, habitLogs, workouts, weight, expenses, income, activities: [...activities, ...prior], metrics, goals }, from, to, ctx.today);
       return {
         result: {
           ...s,
