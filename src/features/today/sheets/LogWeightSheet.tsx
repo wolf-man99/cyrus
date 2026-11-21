@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import { AmountInput } from '@/components/ui/AmountInput';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
-import { useLogWeight, useWeightLogs } from '@/data/hooks/useLogs';
+import { useLogWeight, useWeightLogs } from '@/data/hooks/useData';
 import { useProfile } from '@/data/hooks/useProfile';
 import { useSaveFeedback } from '@/data/hooks/useSaveFeedback';
 import { fieldErrors, parseDecimal, weightEntrySchema } from '@/domain/schemas';

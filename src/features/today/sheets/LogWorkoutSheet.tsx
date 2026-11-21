@@ -3,7 +3,7 @@ import { Sheet, SheetFooter } from '@/components/ui/Sheet';
 import { Button } from '@/components/ui/Button';
 import { ChipGroup } from '@/components/ui/ChipGroup';
 import { FieldError, TextField } from '@/components/ui/Field';
-import { useLogWorkout } from '@/data/hooks/useLogs';
+import { useLogWorkout } from '@/data/hooks/useData';
 import { useSaveFeedback } from '@/data/hooks/useSaveFeedback';
 import { fieldErrors, workoutEntrySchema } from '@/domain/schemas';
 import { WORKOUT_TYPES, type WorkoutIntensity, type WorkoutType } from '@/domain/types';

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { AmountInput } from '@/components/ui/AmountInput';
 import { ChipGroup } from '@/components/ui/ChipGroup';
 import { FieldError, TextField } from '@/components/ui/Field';
-import { useLogExpense } from '@/data/hooks/useLogs';
+import { useLogExpense } from '@/data/hooks/useData';
 import { useProfile } from '@/data/hooks/useProfile';
 import { useSaveFeedback } from '@/data/hooks/useSaveFeedback';
 import { expenseEntrySchema, fieldErrors, parseDecimal } from '@/domain/schemas';
