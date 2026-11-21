@@ -4,65 +4,70 @@
 
 > Simple to use. Powerful under the hood.
 
-Design language: **Orbit × Yap**. Deep cosmic backgrounds, dark purple surfaces, a glowing planet for daily progress, and a full-screen energy orb for the assistant. The chrome stays quiet (no glows, gradient text or looping decoration) so each screen has one bright element: the planet on Today, the orb on Cyrus. The signature detail is an orbit ring with a single dot, used in the planet, the orb and the logo mark.
+Design language: **Orbit × Yap**, in the *Ion core / Volt orb* palette. Blue-tinted graphite surfaces and electric blue for actions; the assistant orb and the Today planet glow in electric green, teal and blue. The chrome stays quiet so each screen has one bright element: the planet on Today, the orb on Cyrus.
 
----
+## What's in the app
 
-## Quick start (demo mode)
+| Section | What it does |
+|---|---|
+| **Today** | Greeting, a progress planet for the day, priorities, one-tap habits with streaks, tasks and commitments, upcoming items, quick logging (weight, workout, expense, task), profile and settings |
+| **Track** | Seven life domains on one shared layout: quick logging, key metrics, a progress chart with a date filter, goals (add, edit, update progress, complete, archive), domain collections and a filterable history. Health report uploads, mood check-ins, reading progress, investments and net worth, monthly money summaries, speaking practice, projects, skills, ventures, experiments and revenue |
+| **Reflect** | Daily, weekly and monthly reviews: one short prompt at a time, context from your own records, domain ratings, linked goals, drafts kept on the device, edit any past reflection, live weekly and monthly summaries |
+| **Cyrus** | Full-screen voice assistant with six orb states (idle, listening, thinking, speaking, interrupted, error). Answers from your data, logs and updates things in natural language, asks before consequential changes, remembers the conversation. Tap or hold to talk, interrupt anytime, or type |
+
+## Run it
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173. With no backend configured, CYRUS runs in **demo mode**:
+With no backend configured, CYRUS runs in **demo mode**: three months of realistic sample data, a persistent "Demo mode · nothing is saved" label, and changes that reset on reload. The assistant's interface works and the microphone drives the orb, but there is **no AI**: typed messages get a clearly labelled *demo response*, and voice isn't sent anywhere.
 
-- Sample data generated for today. Changes live only in the current tab and **reset on reload**.
-- A persistent "Demo mode · nothing is saved" label, and save confirmations that say "not saved".
-- The Cyrus assistant interface is fully interactive (the mic really listens and drives the orb), but **no AI is connected**. Nothing is sent anywhere and no reply is simulated. A visual *preview* control lets you step through the orb's six states, and it is labelled as a preview.
+## Connect the backend
 
-## Connect a real backend
-
-### 1. Supabase (auth, database, storage)
+### 1. Supabase: accounts, database, storage
 
 1. Create a Supabase project.
-2. Apply the schema: `supabase db push`, or paste `supabase/migrations/20261121000000_cyrus_init.sql` into the SQL editor. It creates all tables, enables **Row Level Security** on every user-owned table, and creates the private `health-reports` storage bucket.
-3. In **Authentication → URL configuration**, add your app URL (e.g. `http://localhost:5173`) as a redirect URL. Sign-in is a passwordless email link.
-4. Copy `.env.example` to `.env.local` and fill in:
+2. Apply the schema with `supabase db push`, or run the files in `supabase/migrations/` in order in the SQL editor. This creates every table with **Row Level Security**, the private `health-reports` storage bucket and its policies.
+3. In **Authentication → URL configuration**, add your app URL (e.g. `http://localhost:5173`) to the redirect URLs. It is used for confirmation and password-reset links.
+4. Recommended in **Authentication → Providers → Email**: keep "Confirm email" on and enable leaked-password protection.
+5. Copy `.env.example` to `.env.local`:
 
 ```bash
 VITE_SUPABASE_URL=https://<project>.supabase.co
 VITE_SUPABASE_ANON_KEY=<anon / publishable key>
 ```
 
-The anon key is designed to be public. RLS restricts every row to its owner (`user_id = auth.uid()`), and `user_id` is set server-side by default, so a client cannot write rows for anyone else.
+The anon key is designed to be public. Every row is restricted to its owner (`user_id = auth.uid()`), and `user_id` is set by the database, so a client can't write rows for anyone else. No service-role key is used anywhere.
 
-### 2. Cyrus AI (OpenAI, server-side only)
+### 2. Cyrus AI: OpenAI, server-side only
 
-The OpenAI key **never** reaches the browser. It lives in an Edge Function secret:
+The OpenAI key **never** reaches the browser. It's an Edge Function secret:
 
 ```bash
 supabase secrets set OPENAI_API_KEY=sk-...
 supabase functions deploy cyrus
 ```
 
-Optional settings (all server-side):
+Optional secrets:
 
 | Secret | Default | Purpose |
 |---|---|---|
-| `OPENAI_CHAT_MODEL` | `gpt-4o-mini` | Conversation model |
+| `OPENAI_CHAT_MODEL` | `gpt-4o-mini` | Reasoning and tool use |
 | `OPENAI_TRANSCRIBE_MODEL` | `gpt-4o-mini-transcribe` | Speech to text |
 | `OPENAI_TTS_MODEL` | `gpt-4o-mini-tts` | Text to speech |
 | `OPENAI_TTS_VOICE` | `sage` | Voice |
-| `ALLOWED_ORIGINS` | `*` | Comma-separated CORS allow-list, e.g. `https://cyrus.example.com` |
+| `ALLOWED_ORIGINS` | `*` | Comma-separated CORS allow-list. **Set this in production** |
+| `RATE_LIMIT_PER_MINUTE` | `40` | Requests per user per minute |
 
-Model names change over time, so set these to whichever current models your account has access to.
+Model names change over time; set these to current models your account can use. The Cyrus screen always shows whether a real model is answering: **Connected**, **AI unavailable** (backend up, key missing or unreachable) or **Demo · AI not connected**.
 
-The function rejects any request that isn't from a signed-in user. The Cyrus screen shows **Connected**, **AI unavailable** (backend up, key missing or unreachable) or **Demo · AI not connected**, so you can always tell whether a real model is answering.
+## Install on iPhone
 
-## Install on iPhone (PWA)
+Deploy the build over HTTPS, open it in Safari, then **Share → Add to Home Screen**. CYRUS launches full-screen with its own icon and caches the app shell for offline launch. Data and AI requests are never cached.
 
-Build and deploy (`npm run build`, serve `dist/` over HTTPS), open it in Safari, then **Share → Add to Home Screen**. CYRUS launches full-screen with its own icon, respects the notch and home indicator, and caches the app shell for offline launch. Data and AI requests are never cached.
+The PWA listens only while you hold or tap the microphone. There is no background listening or wake word; browsers don't allow it. "Hey Siri" can open CYRUS through an iOS Shortcut that opens `https://<your-app>/cyrus`.
 
 ## Scripts
 
@@ -70,24 +75,12 @@ Build and deploy (`npm run build`, serve `dist/` over HTTPS), open it in Safari,
 |---|---|
 | `npm run dev` | Dev server |
 | `npm run build` | Type-check and production build (with service worker) |
-| `npm run preview` | Serve the production build locally |
-| `npm test` | Unit tests (Vitest) |
-| `npm run typecheck` | TypeScript only |
-| `npm run icons` | Re-render PNG app icons from `public/icons/favicon.svg` (needs Playwright) |
+| `npm test` | Unit tests: domain logic, the assistant's tool loop, the Edge Function handler, voice activity detection (Vitest) |
+| `npm run test:db` | Applies every migration to a throwaway local Postgres and checks Row Level Security, ownership, constraints and data carry-over (needs PostgreSQL 15+ installed) |
+| `npm run e2e` | Browser suites: every screen in demo mode, the assistant and voice against a mocked Supabase, new-account empty states, layout at three screen sizes (needs Playwright with Chromium) |
+| `npm run icons` | Re-render app icons from `public/icons/favicon.svg` |
 
-## Build status
+## Documentation
 
-The build follows the phased strategy in the product spec.
-
-| Area | Status |
-|---|---|
-| Design system & tokens | ✅ `src/styles/index.css` (CSS tokens), `src/design/tokens.ts` |
-| Navigation & reusable components | ✅ Tab bar (mobile), side rail (desktop), sheets, fields, chips, states |
-| **Today** dashboard | ✅ Greeting, progress planet, priorities, habits (one tap), tasks & commitments, upcoming, quick logs for weight / workout / expense / task, Cyrus entry points |
-| Architecture | ✅ Repository layer (Supabase + demo), React Query, zod validation, RLS schema, AI service layer, edge function, PWA |
-| **Cyrus** interface | ✅ Full-screen orb with 6 states, push-to-talk, interrupt, end, text input, captions, history. AI responses require the connected backend |
-| **Track** | 🟡 All 7 domains with Overview · Goals · Activities · Progress · History. Physical (weight, workouts) and Financial (expenses) show real data. Other domains show goals, with activity logging in the next phase |
-| **Reflect** | 🟡 Daily / weekly / monthly templates and history storage in place. Writing reviews is the next phase |
-| Assistant actions (log, plan, analyse) | 🟡 Capability registry defined (`src/services/ai/capabilities.ts`), not yet enabled |
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for how the pieces fit together.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the pieces fit, the data model, the assistant and security
+- [docs/QA-AUDIT.md](docs/QA-AUDIT.md): the latest audit, with what was fixed and what's left

@@ -3,71 +3,98 @@
 ```
 src/
   app/            App root, router, providers (auth, data, toasts)
-  config/         Browser-safe env (VITE_* only, validated with zod)
-  design/         JS mirror of design tokens
-  styles/         Tailwind v4 + design tokens (@theme), base styles, orb/planet CSS
-  domain/         Pure domain model: types, life-domain config, reflection templates,
-                  zod schemas, habit streaks, progress maths (unit tested)
+  config/         Browser-safe env (VITE_* only)
+  styles/         Tailwind v4 design tokens (@theme), base styles, planet and orb CSS
+  domain/         Pure logic: types, zod schemas, goals, habits, finance, series, period summaries,
+                  life-domain config, reflection templates (unit tested)
   data/
-    repository.ts   The persistence contract the UI depends on
-    supabase/       Supabase client + RLS-backed repository
-    demo/           In-memory sample repository (demo mode, never persisted)
-    hooks/          React Query hooks: queries, optimistic mutations, honest save feedback
+    repository.ts   The persistence contract everything depends on
+    supabase/       Supabase implementation (Row Level Security does the access control)
+    demo/           In-memory implementation with generated sample history (demo mode only)
+    hooks/          React Query hooks; one generic mutation hook invalidates affected data
+    operations.ts   Multi-step operations shared by UI and assistant
   services/
-    ai/             Assistant provider contract, demo + proxy providers, capability registry
-    audio/          Microphone capture (push-to-talk + live level), speech playback
-  components/
-    ui/             Buttons, sheets, fields, chips, segmented control, states…
-    layout/         App shell, bottom tab bar, desktop side rail, demo banner
-    brand/          Planet, mini orb, wordmark
-    orb/            The Cyrus energy orb
-  features/
-    today/ track/ reflect/ cyrus/ auth/
+    assistant/      Speech-to-text, reasoner and text-to-speech contracts; proxy and demo
+                    implementations; tool registry; the agent loop (engine.ts)
+    audio/          Microphone capture, speech playback, voice activity detection
+  components/       UI kit, layout, charts, brand, the Cyrus orb
+  features/         today · track · reflect · cyrus · auth · profile
 supabase/
-  migrations/     Schema + Row Level Security + storage policies
-  functions/cyrus Edge Function: OpenAI proxy (chat, transcribe, speech)
+  migrations/       Schema, RLS, storage policies (applied in order)
+  functions/cyrus/  Edge Function: handler.ts (testable), prompt.ts, index.ts (Deno entry)
+  tests/            Local Postgres stubs, fixtures and RLS tests
+e2e/                Browser suites (Playwright)
 ```
+
+## Data model
+
+| Table | Holds |
+|---|---|
+| `profiles` | Name, weight unit, currency, time zone (created by a trigger at sign-up) |
+| `tasks` | Tasks; a due time makes a commitment; future dates are "upcoming" |
+| `habits`, `habit_logs` | Habits and one row per day done |
+| `goals` | Per-domain goals with start, current and target values, category and status (active, paused, completed, archived) |
+| `activity_logs` | Everything done in a domain: meditation, journal, focus, reading, notes, social time, speaking practice, achievements, milestones, revenue, and goal-progress history (written by a trigger) |
+| `domain_metrics` | Numeric series: mood and energy (1–5), body measurements, savings and debt balances |
+| `weight_logs`, `workouts` | Weight; workouts with optional exercises |
+| `expenses`, `income`, `investments` | Money in, money out, holdings and their current value |
+| `learning_resources`, `skills`, `projects` | Books and courses with progress; skills with current and target level; career projects and business ideas, ventures and experiments |
+| `health_reports` | Metadata for files in the private `health-reports` bucket (`<user_id>/<file>`) |
+| `reflections`, `reflection_goals` | Daily, weekly and monthly reflections with domain ratings, and the goals they mention |
+| `conversations`, `messages` | Assistant memory, including the actions taken in each reply |
+
+Every user-owned table has `user_id default auth.uid()`, RLS policies scoped to the owner, CHECK constraints mirroring the zod schemas, and indexes on `(user_id, time)`. Composite foreign keys (`(id, user_id)`) make it impossible to link to another user's habit, goal, reflection or conversation, even with a guessed id.
 
 ## Data flow
 
 ```
-UI component ─▶ React Query hook ─▶ Repository (interface)
-                                       ├─ SupabaseRepository ─▶ Postgres (RLS: user_id = auth.uid())
-                                       └─ DemoRepository     ─▶ in-memory, resets on reload
+UI ─▶ React Query hook ─▶ Repository ─┬─ Supabase (RLS)   real accounts
+                                      └─ Demo (in memory)  demo mode only, loaded on demand
 ```
 
-- `DataProvider` picks the repository from the auth state and creates a fresh query cache per user, so cached data can never cross accounts.
-- Every write is validated with the zod schemas in `domain/schemas.ts`. The same limits exist as Postgres `CHECK` constraints.
-- Habit and task toggles are optimistic (one tap, instant) and roll back on error.
-- `useSaveFeedback` never says "saved" in demo mode.
-
-## Security
-
-- **RLS everywhere.** Every user-owned table has select/insert/update/delete policies scoped to `auth.uid()`. `user_id` defaults to `auth.uid()`, so the client never sends ownership.
-- **Composite foreign keys** (`habit_logs → habits`, `assistant_messages → assistant_conversations`) make it impossible to attach rows to someone else's records.
-- **Storage.** `health-reports` is private, and objects must live under `<user_id>/…`.
-- **API keys.** Only the Supabase URL and anon key are in the bundle. The OpenAI key is an Edge Function secret. The function verifies the user's JWT (the anon key alone is rejected), validates and size-limits input, and never forwards upstream error details to the client.
+All writes are validated with the zod schemas in `domain/schemas.ts`, and again by Postgres. Toggles are optimistic. `useSaveFeedback` never says "saved" in demo mode.
 
 ## The assistant
 
 ```
-TalkButton ─▶ useCyrusConversation ─▶ AssistantProvider ─▶ /functions/v1/cyrus ─▶ OpenAI
-                 │  (orchestration)        ├─ demo:  refuses everything (AssistantNotConnectedError)
-                 │                         └─ proxy: transcribe · reply · speak
-                 ├─ conversationMachine (pure reducer, unit tested)
-                 ├─ MicrophoneCapture  → live input level
-                 └─ SpeechPlayer       → live output level ─▶ CyrusOrb
+             ┌──────────── client ────────────┐            ┌──── Edge Function ────┐
+mic ─▶ MicrophoneCapture ─▶ SpeechToText ──────┼──/transcribe──▶ OpenAI STT
+                                               │
+text ─▶ engine.runTurn ◀──▶ Reasoner ──────────┼──/chat────────▶ system prompt + OpenAI chat (tools)
+            │ tool calls                       │
+            ▼                                  │
+        tools.ts ─▶ Repository (user's own RLS session)
+            │ confirm() for consequential changes
+            ▼
+        reply ─▶ TextToSpeech ─────────────────┼──/speech──────▶ OpenAI TTS
+                  └▶ SpeechPlayer ─▶ orb level │
 ```
 
-**States.** `idle → listening → thinking → speaking → idle`. `interrupted` is reachable from listening, thinking or speaking, and `error` from anywhere. The reducer ignores events that are invalid for the current state, so a late reply after an interruption is dropped.
+- **Three separate services.** Speech recognition, reasoning and speech generation each sit behind their own interface and endpoint, so any one can move to a realtime voice API, an on-device model or a native iOS bridge without touching the others.
+- **Tools run on the client, through the Repository.** The model never gets database credentials; every read and write uses the signed-in user's session, so Row Level Security applies, and inputs pass the same validation as the UI. 27 tools cover retrieval, data entry, updates and analysis (`get_period_review` reuses the same summary logic as Reflect).
+- **Action safety.** Tools that change existing records or are hard to undo (`update_task`, `create_goal`, `update_goal`, `save_reflection`) wait for explicit confirmation: tap, or say "yes" or "no". There are no delete tools. Every change appears as a receipt under the reply and is stored with the message.
+- **Honesty rules** live in the server-side system prompt: use tools for facts, never invent data, say when something isn't recorded, treat conversation memory as memory rather than records, challenge weak reasoning, and ask when a request is ambiguous.
+- **Memory.** Conversations and messages are stored; the most recent conversation resumes for 12 hours, and earlier ones can be reopened. The last 20 turns are sent as context.
+- **States.** `conversationMachine.ts` is a pure reducer for the six visual states, plus pausing for confirmation. The orb reads live levels from the microphone or speech playback and writes transforms directly to the DOM each frame.
 
-**Push-to-talk.** Hold the button (or Space / Enter) to talk and release to send. A quick tap latches the mic open, and a second tap sends. Pressing while Cyrus thinks or speaks interrupts immediately (barge-in).
+### Voice
 
-**The orb** writes transforms straight to the DOM on each animation frame from a `getLevel()` callback, so React never re-renders per frame. It is compositor-only (transform and opacity on pre-blurred layers) and honours `prefers-reduced-motion`.
+Tap the mic and speak; voice activity detection ends the turn after a pause (or tap again). Holding the mic is push-to-talk. Tapping during a reply interrupts it immediately. The app checks microphone permission up front, explains how to fix a block, and falls back to typing. Offline and network failures show a clear error with **Try again**. Audio is sent for transcription only and is never stored.
 
 ### Extending
 
-- **Realtime voice.** Implement `AssistantProvider` with a WebRTC session to a realtime model. The conversation hook and orb only need `getLevel()` and the state events.
-- **Assistant actions.** `services/ai/capabilities.ts` declares each capability with the same zod schema the UI uses and an `execute(repo, args)` that runs through the user's RLS-scoped repository. Enabling them means sending the enabled capabilities as OpenAI tools and executing returned tool calls client-side, with confirmation where `confirm: true`.
-- **Siri.** The PWA exposes `/cyrus` as a manifest shortcut. An iOS Shortcut ("Open URL" → `https://<app>/cyrus`) can be triggered by "Hey Siri, talk to Cyrus" today. A native App Intents bridge can later target the same provider contract.
-- **New domain modules.** Add a module to `features/track/modules/registry.ts`. The domain page picks it up, and sections without a module fall back to shared views.
+- **Realtime voice:** implement `Reasoner` + `SpeechToText` + `TextToSpeech` over a WebRTC realtime session; the engine, tools and orb stay as they are.
+- **Native iOS / Siri:** an App Intents extension can call the same Edge Function and the same tool contract. Until then, an iOS Shortcut opening `/cyrus` gives "Hey Siri, talk to Cyrus". No always-on listening exists in the PWA.
+- **New tools:** add an entry to `services/assistant/tools.ts` with a zod schema; it is sent to the model automatically.
+- **New domain features:** add an activity kind to `features/track/activityKinds.ts`, or a module slot in `features/track/domains/`.
+
+## Security model
+
+| Concern | How it's handled |
+|---|---|
+| Data isolation | RLS on every table (verified by `npm run test:db`), `user_id` defaulted server-side, composite foreign keys |
+| Files | Private bucket, per-user folders enforced by storage policies, 5-minute signed URLs, type and size checks before upload |
+| Secrets | Only the Supabase URL and anon key are in the bundle; the OpenAI key is an Edge Function secret; no service-role key in the app |
+| Edge Function | Requires a real user session (anon key alone is rejected), validates every request, caps sizes, rate-limits per user, restricts CORS to `ALLOWED_ORIGINS`, never returns upstream error details |
+| Assistant | No elevated access; confirmations for consequential changes; no delete capability; all inputs validated |
+| Client | No HTML rendering of user content; React escapes everything |
