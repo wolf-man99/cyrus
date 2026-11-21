@@ -24,7 +24,7 @@ const page = await browser.newPage();
 for (const { file, size } of targets) {
   await page.setViewportSize({ width: size, height: size });
   await page.setContent(
-    `<html><body style="margin:0;background:#090611">${svg.replace('<svg ', `<svg width="${size}" height="${size}" `)}</body></html>`,
+    `<html><body style="margin:0;background:#05070c">${svg.replace('<svg ', `<svg width="${size}" height="${size}" `)}</body></html>`,
   );
   await page.screenshot({ path: `${root}${file}`, omitBackground: false });
   console.log('wrote', file);

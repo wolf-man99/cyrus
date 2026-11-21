@@ -34,8 +34,8 @@ export function Planet({ progress, className, label }: PlanetProps) {
       <svg aria-hidden viewBox="0 0 200 200" className="absolute inset-0 size-full overflow-visible">
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#B44CFF" />
-            <stop offset="100%" stopColor="#FF7AD9" />
+            <stop offset="0%" stopColor="#00C2FF" />
+            <stop offset="100%" stopColor="#1F6BFF" />
           </linearGradient>
           <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="2.2" result="blur" />
@@ -46,7 +46,7 @@ export function Planet({ progress, className, label }: PlanetProps) {
           </filter>
         </defs>
         {/* Orbit track */}
-        <circle cx="100" cy="100" r={R} fill="none" stroke="#8538F5" strokeOpacity="0.45" strokeWidth="1" />
+        <circle cx="100" cy="100" r={R} fill="none" stroke="#1F6BFF" strokeOpacity="0.4" strokeWidth="1" />
         {/* Progress arc */}
         <circle
           cx="100"
@@ -63,23 +63,18 @@ export function Planet({ progress, className, label }: PlanetProps) {
           style={{ transition: 'stroke-dashoffset 900ms cubic-bezier(0.16, 1, 0.3, 1)' }}
         />
         {/* Start marker + progress head */}
-        <circle cx="100" cy={100 - R} r="2.6" fill="#FF5C7A" />
+        <circle cx="100" cy={100 - R} r="2.6" fill="#00C2FF" />
         {p > 0.01 && (
           <circle
             cx={head.x}
             cy={head.y}
             r="4"
-            fill="#fff"
+            fill="#2EF07A"
             filter={`url(#${glowId})`}
             style={{ transition: 'cx 900ms cubic-bezier(0.16,1,0.3,1), cy 900ms cubic-bezier(0.16,1,0.3,1)' }}
           />
         )}
       </svg>
-
-      {/* Slowly orbiting moon */}
-      <div aria-hidden className="absolute inset-0 animate-spin-slow">
-        <span className="absolute top-[94%] left-1/2 size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF5C7A] shadow-[0_0_10px_2px_rgb(255_92_122/0.6)]" />
-      </div>
 
       {/* The planet */}
       <div aria-hidden className="planet-sphere absolute inset-[29%] overflow-hidden rounded-full">

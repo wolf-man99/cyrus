@@ -3,20 +3,18 @@
  * Use only where CSS variables are not practical (inline gradients, canvas, meta tags).
  */
 export const palette = {
-  canvas: '#090611',
-  surface: '#1A1129',
-  surfaceRaised: '#231738',
-  primary: '#8538F5',
-  secondary: '#B44CFF',
-  magenta: '#E04BD6',
-  lilac: '#D9C2FF',
-  fg: '#FFFFFF',
-  muted: '#A7A0B5',
-  success: '#5EE3A1',
-  warning: '#FFC061',
-  danger: '#FF5C7A',
+  canvas: '#05070C',
+  surface: '#0E131C',
+  surfaceRaised: '#151C28',
+  primary: '#1F6BFF',
+  secondary: '#00C2FF',
+  volt: '#2EF07A',
+  fg: '#EEF3FA',
+  muted: '#8F9BAE',
+  success: '#2EF07A',
+  warning: '#FFB020',
+  danger: '#FF4D5E',
 } as const;
-
 export const motion = {
   spring: { type: 'spring', stiffness: 420, damping: 32 } as const,
   softSpring: { type: 'spring', stiffness: 220, damping: 26 } as const,

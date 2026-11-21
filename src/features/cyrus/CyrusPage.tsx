@@ -24,14 +24,12 @@ const STATUS_TEXT: Record<CyrusStatus, string> = {
 };
 
 const BACKDROPS: Record<CyrusStatus, string> = {
-  idle: 'radial-gradient(85% 60% at 50% 42%, rgb(133 56 245 / 0.30) 0%, transparent 70%)',
-  listening:
-    'radial-gradient(90% 70% at 50% 42%, rgb(224 75 214 / 0.34) 0%, rgb(133 56 245 / 0.18) 45%, transparent 78%)',
-  thinking: 'radial-gradient(90% 65% at 50% 42%, rgb(108 92 255 / 0.32) 0%, rgb(60 30 140 / 0.2) 50%, transparent 80%)',
-  speaking:
-    'radial-gradient(95% 72% at 50% 42%, rgb(240 110 220 / 0.32) 0%, rgb(180 76 255 / 0.22) 45%, transparent 80%)',
-  interrupted: 'radial-gradient(80% 55% at 50% 42%, rgb(217 194 255 / 0.22) 0%, transparent 70%)',
-  error: 'radial-gradient(80% 55% at 50% 42%, rgb(255 92 122 / 0.22) 0%, transparent 70%)',
+  idle: 'radial-gradient(85% 60% at 50% 42%, rgb(0 214 180 / 0.20) 0%, rgb(19 163 255 / 0.10) 45%, transparent 72%)',
+  listening: 'radial-gradient(90% 70% at 50% 42%, rgb(46 240 122 / 0.28) 0%, rgb(0 214 180 / 0.14) 45%, transparent 78%)',
+  thinking: 'radial-gradient(90% 65% at 50% 42%, rgb(19 163 255 / 0.28) 0%, rgb(31 107 255 / 0.16) 50%, transparent 80%)',
+  speaking: 'radial-gradient(95% 72% at 50% 42%, rgb(0 214 180 / 0.26) 0%, rgb(19 163 255 / 0.16) 45%, transparent 80%)',
+  interrupted: 'radial-gradient(80% 55% at 50% 42%, rgb(200 255 225 / 0.16) 0%, transparent 70%)',
+  error: 'radial-gradient(80% 55% at 50% 42%, rgb(255 77 94 / 0.22) 0%, transparent 70%)',
 };
 
 const CAPTIONS_KEY = 'cyrus.captions';
